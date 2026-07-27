@@ -27,50 +27,6 @@ export const en: Dict = {
     secondary: 'see the stack',
   },
 
-  treatments: {
-    label: 'treatment',
-    boot: 'boot',
-    statement: 'statement',
-    field: 'field',
-  },
-
-  heroBoot: {
-    badge: 'available for freelance',
-    headline: ['I build the app,', 'the API,', 'and everything'],
-    headlineAccent: 'between them.',
-    body: 'Mobile developer full-time — React Native and Expo shipped to iOS, Android and Android TV. Freelance, I take the whole stack: NestJS services, PostgreSQL and Prisma, payment gateways, headless CMS, and the web front end on top.',
-    stats: [
-      { value: 'iOS · Android · TV', label: 'platforms shipped to' },
-      { value: 'end‑to‑end', label: 'app → api → database' },
-    ],
-    file: '~/boot.sh',
-    lines: [
-      { kind: 'prompt', text: '$ whoami' },
-      { kind: 'plain', text: 'mobile developer — react native / expo' },
-      { kind: 'blank' },
-      { kind: 'prompt', text: '$ cat ./freelance.json' },
-      { kind: 'punct', text: '{' },
-      { kind: 'accent', text: '  "frontend": ["React", "React Native", "Expo", "TV"],' },
-      { kind: 'accent', text: '  "backend":  ["NestJS", "Express", "Node"],' },
-      { kind: 'accent', text: '  "data":     ["PostgreSQL", "Prisma", "Sanity"],' },
-      { kind: 'accent', text: '  "extras":   ["Mercado Pago", "webhooks", "OTA"]' },
-      { kind: 'punct', text: '}' },
-      { kind: 'blank' },
-      { kind: 'prompt', text: '$ ./availability --check' },
-      { kind: 'accent', text: 'accepting freelance projects ✓' },
-    ],
-  },
-
-  heroStatement: {
-    kickerRole: 'mobile · full stack',
-    kickerStatus: 'open for work',
-    headlineTop: 'MOBILE FIRST.',
-    headlineDim: 'BACKEND',
-    headlineMid: ' WHEN',
-    headlineEnd: 'IT COUNTS.',
-    body: 'Full-time React Native developer shipping to phones and Android TV. Freelance, I own the whole line: the app, the NestJS API behind it, the PostgreSQL schema under that, and the payment and CMS integrations that make it a product instead of a demo.',
-  },
-
   heroField: {
     kicker: `${profile.name.toLowerCase()} — buenos aires · remote`,
     headline: ['Apps that ship.', 'Backends that hold.'],
@@ -415,7 +371,6 @@ export const en: Dict = {
   availability: {
     eyebrow: '06 — availability',
     heading: 'How working together looks',
-    note: 'Rates are placeholders — swap them, or delete the numbers and keep the formats.',
     items: [
       {
         kind: 'project',
@@ -451,9 +406,11 @@ export const en: Dict = {
     headline: ['Tell me what', "you're building."],
     body: "A paragraph is enough. I'll come back with a scope, a timeline and an honest read on whether I'm the right person for it.",
     labels: {
-      email: 'email',
-      github: 'github',
-      instagram: 'instagram',
+      email: 'Email',
+      whatsapp: 'WhatsApp',
+      github: 'GitHub',
+      linkedin: 'LinkedIn',
+      instagram: 'Instagram',
       based: 'based',
       languages: 'languages',
     },
@@ -469,12 +426,18 @@ export const en: Dict = {
       project: 'the project',
       projectPlaceholder: "What it is, who it's for, and when you'd want it live.",
       submit: 'send it →',
+      sending: 'sending…',
       sentRoute: 'POST /api/contact',
-      sentStatus: '201 Created',
+      sentStatus: '200 OK',
       sentGreeting: 'Got it,',
-      sentBody:
-        'This form is a front-end demo — wire it to your inbox or a form service before launch. Meanwhile, email works.',
+      sentBody: "It's in my inbox. I'll come back to you within a day or two.",
+      handoffBody:
+        'Your email client should be open with the message ready — hit send there and it reaches me.',
       sendAnother: 'send another',
+      errorStatus: '502 Bad Gateway',
+      errorBody: "That didn't go through. Send it by email instead — same message, one click.",
+      errorRetry: 'try again',
+      errorMailto: 'open email instead →',
     },
   },
 

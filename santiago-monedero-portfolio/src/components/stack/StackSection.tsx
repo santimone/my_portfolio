@@ -11,7 +11,7 @@ const pctByKey = new Map<DepthKey, number>(DEPTH_LEVELS.map((d) => [d.key, d.pct
 
 export function StackSection() {
   const { t } = useI18n()
-  const [view, setView] = useState<View>('tree')
+  const [view, setView] = useState<View>('graph')
 
   return (
     <section id="stack" style={{ padding: sectionPad }}>
@@ -43,7 +43,8 @@ export function StackSection() {
               background: c.bgRaised,
             }}
           >
-            {(['tree', 'depth', 'graph'] as const).map((key) => (
+            {/* graph first, so the default view is also the leftmost tab */}
+            {(['graph', 'tree', 'depth'] as const).map((key) => (
               <button
                 key={key}
                 type="button"

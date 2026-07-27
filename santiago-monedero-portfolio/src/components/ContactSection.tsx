@@ -1,12 +1,17 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
+import { canPostDirectly, mailtoUrl, postContact, type ContactPayload } from '../lib/sendContact'
 import { c, mono, sans, shell } from '../theme'
+import {
+  GitHubIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  MailIcon,
+  WhatsAppIcon,
+} from './Icons'
 
-interface Sent {
-  name: string
-  ms: number
-}
+type Status = 'idle' | 'sending' | 'sent' | 'handoff' | 'error'
 
 export function ContactSection() {
   const { t } = useI18n()
@@ -16,21 +21,44 @@ export function ContactSection() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [needs, setNeeds] = useState<string[]>([])
-  const [sent, setSent] = useState<Sent | null>(null)
+  const [honey, setHoney] = useState('')
+  const [status, setStatus] = useState<Status>('idle')
+  const [ms, setMs] = useState(0)
 
-  const onSubmit = (e: FormEvent) => {
+  const payload = (): ContactPayload => ({ name, email, message, needs })
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const first = name.trim().split(' ')[0] || 'there'
-    setSent({ name: first, ms: 40 + Math.floor(Math.random() * 90) })
+    if (honey) return // a bot filled the hidden field
+
+    // No form key configured? Hand the message to the visitor's mail client
+    // rather than pretending it was delivered.
+    if (!canPostDirectly) {
+      window.location.href = mailtoUrl(payload())
+      setStatus('handoff')
+      return
+    }
+
+    setStatus('sending')
+    const started = performance.now()
+    try {
+      await postContact(payload())
+      setMs(Math.max(1, Math.round(performance.now() - started)))
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   const reset = () => {
-    setSent(null)
+    setStatus('idle')
     setName('')
     setEmail('')
     setMessage('')
     setNeeds([])
   }
+
+  const firstName = name.trim().split(' ')[0]
 
   const labelStyle: React.CSSProperties = {
     fontFamily: mono,
@@ -48,13 +76,6 @@ export function ContactSection() {
     fontSize: 14.5,
     outline: 'none',
   }
-
-  const contactRow = (label: string, node: React.ReactNode) => (
-    <div style={{ display: 'flex', gap: 12 }}>
-      <span style={{ color: c.textFaint, minWidth: 74 }}>{label}</span>
-      {node}
-    </div>
-  )
 
   return (
     <section
@@ -118,41 +139,70 @@ export function ContactSection() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 10,
+              gap: 13,
               fontFamily: mono,
               fontSize: 13.5,
             }}
           >
-            <a href={`mailto:${profile.email}`} style={{ display: 'flex', gap: 12 }}>
-              <span style={{ color: c.textFaint, minWidth: 74 }}>{t.contact.labels.email}</span>
+            <ContactLink
+              href={`mailto:${profile.email}`}
+              label={t.contact.labels.email}
+              icon={<MailIcon />}
+            >
               {profile.email}
-            </a>
-            <a
+            </ContactLink>
+
+            <ContactLink
+              href={`https://wa.me/${profile.whatsapp.e164}`}
+              label={t.contact.labels.whatsapp}
+              icon={<WhatsAppIcon />}
+              external
+            >
+              {profile.whatsapp.label}
+            </ContactLink>
+
+            <ContactLink
               href={profile.github.url}
-              target="_blank"
-              rel="noreferrer"
-              style={{ display: 'flex', gap: 12 }}
+              label={t.contact.labels.github}
+              icon={<GitHubIcon />}
+              external
             >
-              <span style={{ color: c.textFaint, minWidth: 74 }}>{t.contact.labels.github}</span>
               {profile.github.label}
-            </a>
-            <a
-              href={profile.instagram.url}
-              target="_blank"
-              rel="noreferrer"
-              style={{ display: 'flex', gap: 12 }}
+            </ContactLink>
+
+            <ContactLink
+              href={profile.linkedin.url}
+              label={t.contact.labels.linkedin}
+              icon={<LinkedInIcon />}
+              external
             >
-              <span style={{ color: c.textFaint, minWidth: 74 }}>{t.contact.labels.instagram}</span>
+              {profile.linkedin.label}
+            </ContactLink>
+
+            <ContactLink
+              href={profile.instagram.url}
+              label={t.contact.labels.instagram}
+              icon={<InstagramIcon />}
+              external
+            >
               {profile.instagram.label}
-            </a>
-            {contactRow(
-              t.contact.labels.based,
-              <span style={{ color: c.textSoft }}>{t.contact.basedValue}</span>,
-            )}
-            {contactRow(
-              t.contact.labels.languages,
-              <span style={{ color: c.textSoft }}>{t.contact.languagesValue}</span>,
-            )}
+            </ContactLink>
+
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '6px 18px',
+                marginTop: 6,
+                paddingTop: 14,
+                borderTop: `1px solid ${c.lineDim}`,
+                color: c.textFaint,
+                fontSize: 12.5,
+              }}
+            >
+              <span>{t.contact.basedValue}</span>
+              <span>{t.contact.languagesValue}</span>
+            </div>
           </div>
         </div>
 
@@ -164,63 +214,45 @@ export function ContactSection() {
             padding: 'clamp(22px, 3vw, 32px)',
           }}
         >
-          {sent ? (
-            <div
-              style={{
-                minHeight: 300,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                gap: 14,
-                fontFamily: mono,
-              }}
+          {status === 'sent' || status === 'handoff' ? (
+            <Panel
+              route={f.sentRoute}
+              status={status === 'sent' ? `${f.sentStatus} · ${ms}ms` : f.sentStatus}
+              statusColor={c.acc}
+              title={`${f.sentGreeting} ${firstName || 'there'}.`}
+              bodyText={status === 'sent' ? f.sentBody : f.handoffBody}
             >
-              <div style={{ fontSize: 12.5, color: 'oklch(0.55 0.01 250)' }}>{f.sentRoute}</div>
-              <div style={{ fontSize: 12.5, color: c.acc }}>
-                {f.sentStatus} · {sent.ms}ms
-              </div>
-              <div
-                style={{
-                  fontSize: 19,
-                  color: c.text,
-                  fontFamily: sans,
-                  fontWeight: 600,
-                  marginTop: 8,
-                }}
-              >
-                {f.sentGreeting} {sent.name}.
-              </div>
-              <div
-                style={{
-                  fontSize: 14,
-                  color: 'oklch(0.68 0.01 250)',
-                  fontFamily: sans,
-                  lineHeight: 1.6,
-                  maxWidth: '40ch',
-                }}
-              >
-                {f.sentBody}
-              </div>
               <button
                 type="button"
                 className="btn-outline"
                 onClick={reset}
-                style={{
-                  alignSelf: 'flex-start',
-                  marginTop: 8,
-                  padding: '10px 16px',
-                  borderRadius: 5,
-                  border: `1px solid ${c.lineBright}`,
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  fontFamily: mono,
-                  fontSize: 12,
-                  color: c.textSoft,
-                }}
+                style={outlineButton}
               >
                 {f.sendAnother}
               </button>
-            </div>
+            </Panel>
+          ) : status === 'error' ? (
+            <Panel
+              route={f.sentRoute}
+              status={f.errorStatus}
+              statusColor={c.danger}
+              title={f.errorRetry}
+              bodyText={f.errorBody}
+            >
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                <a href={mailtoUrl(payload())} className="btn-primary" style={primaryButton}>
+                  {f.errorMailto}
+                </a>
+                <button
+                  type="button"
+                  className="btn-outline"
+                  onClick={() => setStatus('idle')}
+                  style={outlineButton}
+                >
+                  {f.errorRetry}
+                </button>
+              </div>
+            </Panel>
           ) : (
             <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -229,7 +261,9 @@ export function ContactSection() {
                 </label>
                 <input
                   id="cf-name"
+                  name="name"
                   className="field"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={f.namePlaceholder}
@@ -243,8 +277,10 @@ export function ContactSection() {
                 </label>
                 <input
                   id="cf-email"
+                  name="email"
                   className="field"
                   type="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={f.emailPlaceholder}
@@ -292,41 +328,157 @@ export function ContactSection() {
                 </label>
                 <textarea
                   id="cf-msg"
+                  name="message"
                   className="field"
                   rows={5}
+                  required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={f.projectPlaceholder}
-                  style={{
-                    ...fieldStyle,
-                    resize: 'vertical',
-                    fontFamily: sans,
-                    lineHeight: 1.55,
-                  }}
+                  style={{ ...fieldStyle, resize: 'vertical', fontFamily: sans, lineHeight: 1.55 }}
+                />
+              </div>
+
+              <div className="honey" aria-hidden>
+                <label htmlFor="cf-botcheck">Leave this empty</label>
+                <input
+                  id="cf-botcheck"
+                  name="botcheck"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honey}
+                  onChange={(e) => setHoney(e.target.value)}
                 />
               </div>
 
               <button
                 type="submit"
                 className="btn-primary"
+                disabled={status === 'sending'}
                 style={{
+                  ...primaryButton,
                   padding: '14px 20px',
-                  borderRadius: 5,
-                  border: 'none',
-                  cursor: 'pointer',
-                  background: c.acc,
-                  color: c.accInk,
-                  fontFamily: mono,
-                  fontSize: 13,
-                  fontWeight: 700,
+                  opacity: status === 'sending' ? 0.7 : 1,
+                  cursor: status === 'sending' ? 'progress' : 'pointer',
                 }}
               >
-                {f.submit}
+                {status === 'sending' ? f.sending : f.submit}
               </button>
             </form>
           )}
         </div>
       </div>
     </section>
+  )
+}
+
+const primaryButton: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '12px 18px',
+  borderRadius: 5,
+  border: 'none',
+  cursor: 'pointer',
+  background: c.acc,
+  color: c.accInk,
+  fontFamily: mono,
+  fontSize: 13,
+  fontWeight: 700,
+}
+
+const outlineButton: React.CSSProperties = {
+  alignSelf: 'flex-start',
+  padding: '10px 16px',
+  borderRadius: 5,
+  border: `1px solid ${c.lineBright}`,
+  background: 'transparent',
+  cursor: 'pointer',
+  fontFamily: mono,
+  fontSize: 12,
+  color: c.textSoft,
+}
+
+/** One row of the contact list: brand logo, then something a human can read. */
+function ContactLink({
+  href,
+  label,
+  icon,
+  external = false,
+  children,
+}: {
+  href: string
+  label: string
+  icon: ReactNode
+  external?: boolean
+  children: ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      className="contact-row"
+      aria-label={`${label}: ${String(children)}`}
+      {...(external ? { target: '_blank', rel: 'noreferrer' } : null)}
+    >
+      {icon}
+      <span>{children}</span>
+    </a>
+  )
+}
+
+/** Shared frame for the post-submit states, styled like an HTTP response. */
+function Panel({
+  route,
+  status,
+  statusColor,
+  title,
+  bodyText,
+  children,
+}: {
+  route: string
+  status: string
+  statusColor: string
+  title: string
+  bodyText: string
+  children: ReactNode
+}) {
+  return (
+    <div
+      role="status"
+      style={{
+        minHeight: 300,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 14,
+        fontFamily: mono,
+      }}
+    >
+      <div style={{ fontSize: 12.5, color: 'oklch(0.55 0.01 250)' }}>{route}</div>
+      <div style={{ fontSize: 12.5, color: statusColor }}>{status}</div>
+      <div
+        style={{
+          fontSize: 19,
+          color: c.text,
+          fontFamily: sans,
+          fontWeight: 600,
+          marginTop: 8,
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          fontSize: 14,
+          color: 'oklch(0.68 0.01 250)',
+          fontFamily: sans,
+          lineHeight: 1.6,
+          maxWidth: '40ch',
+        }}
+      >
+        {bodyText}
+      </div>
+      <div style={{ marginTop: 8 }}>{children}</div>
+    </div>
   )
 }

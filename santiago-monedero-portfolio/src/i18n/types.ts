@@ -2,40 +2,6 @@ import type { DepthKey } from '../data/profile'
 
 export type Lang = 'en' | 'es'
 
-export interface StatItem {
-  value: string
-  label: string
-}
-
-export interface HeroBootCopy {
-  badge: string
-  headline: string[]
-  headlineAccent: string
-  body: string
-  stats: [StatItem, StatItem]
-  /** terminal window title, e.g. ~/boot.sh */
-  file: string
-  /** the lines that type themselves out, tagged by role */
-  lines: BootLine[]
-}
-
-export type BootLineKind = 'prompt' | 'plain' | 'accent' | 'punct' | 'blank'
-
-export interface BootLine {
-  kind: BootLineKind
-  text?: string
-}
-
-export interface HeroStatementCopy {
-  kickerRole: string
-  kickerStatus: string
-  headlineTop: string
-  headlineDim: string
-  headlineMid: string
-  headlineEnd: string
-  body: string
-}
-
 export interface HeroFieldCopy {
   kicker: string
   headline: [string, string]
@@ -137,14 +103,6 @@ export interface Dict {
     primary: string
     secondary: string
   }
-  treatments: {
-    label: string
-    boot: string
-    statement: string
-    field: string
-  }
-  heroBoot: HeroBootCopy
-  heroStatement: HeroStatementCopy
   heroField: HeroFieldCopy
   stack: {
     eyebrow: string
@@ -183,7 +141,6 @@ export interface Dict {
   availability: {
     eyebrow: string
     heading: string
-    note: string
     items: EngagementEntry[]
   }
   contact: {
@@ -192,7 +149,9 @@ export interface Dict {
     body: string
     labels: {
       email: string
+      whatsapp: string
       github: string
+      linkedin: string
       instagram: string
       based: string
       languages: string
@@ -209,11 +168,18 @@ export interface Dict {
       project: string
       projectPlaceholder: string
       submit: string
+      sending: string
       sentRoute: string
       sentStatus: string
       sentGreeting: string
       sentBody: string
+      /** shown when the browser hands off to the visitor's mail client instead */
+      handoffBody: string
       sendAnother: string
+      errorStatus: string
+      errorBody: string
+      errorRetry: string
+      errorMailto: string
     }
   }
   footer: {

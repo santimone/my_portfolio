@@ -3,7 +3,7 @@ import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
 import type { Dict, Lang } from '../i18n/types'
 import { c, mono } from '../theme'
-import { TerminalChrome } from './heroes/HeroBoot'
+import { TerminalChrome } from './TerminalChrome'
 
 type Tone = 'prompt' | 'normal' | 'dim' | 'accent' | 'error'
 
@@ -105,7 +105,10 @@ export function Terminal() {
         case key === 'contact':
           out.push(
             acc(profile.email),
-            nor(`${profile.github.label}  ·  instagram ${profile.instagram.label}`),
+            acc(`whatsapp  ${profile.whatsapp.label}`),
+            nor(`github    ${profile.github.label}`),
+            nor(`linkedin  ${profile.linkedin.label}`),
+            nor(`instagram ${profile.instagram.label}`),
             dim(term.contactLocation),
             blank(),
           )

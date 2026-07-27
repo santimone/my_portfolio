@@ -9,9 +9,18 @@ export const profile = {
 
   email: 'santiagomonedero122@gmail.com',
 
+  /** Argentine mobile: +54 9 11 …  — wa.me wants digits only, no + and no spaces. */
+  whatsapp: {
+    e164: '5491127587037',
+    label: '+54 9 11 2758-7037',
+  },
   github: {
     url: 'https://github.com/santimone',
-    label: 'github.com/santimone',
+    label: 'santimone',
+  },
+  linkedin: {
+    url: 'https://www.linkedin.com/in/santiago-maria-monedero-7a7a11182/',
+    label: 'Santiago Monedero',
   },
   instagram: {
     url: 'https://www.instagram.com/santiagomonedero/',
@@ -58,27 +67,6 @@ export const GRAPH_COLORS = [
   'oklch(0.82 0.14 95)',
   'oklch(0.78 0.14 320)',
   'oklch(0.70 0.01 250)',
-]
-
-/** Ticker strip in the "statement" hero — tool names, identical in both languages. */
-export const MARQUEE = [
-  'React Native',
-  'Expo',
-  'Android TV',
-  'TypeScript',
-  'React',
-  'NestJS',
-  'Express',
-  'Node.js',
-  'PostgreSQL',
-  'Prisma',
-  'Sanity.io',
-  'Mercado Pago',
-  'Git',
-  'Bash',
-  'Figma',
-  'Python',
-  'C++',
 ]
 
 /** Proficiency bars — the percentages are language-independent. */

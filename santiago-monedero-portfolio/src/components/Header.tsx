@@ -1,20 +1,25 @@
 import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
+import type { Dict } from '../i18n/types'
 import { useViewportWidth } from '../hooks/useViewportWidth'
 import { c, mono } from '../theme'
 import { LanguageSwitch } from './LanguageSwitch'
+import { StableLabel } from './StableLabel'
+
+/**
+ * Nav labels are addressed by getter rather than by value: StableLabel needs
+ * both languages at once to reserve the wider of the two.
+ */
+const LINKS: { href: string; pick: (d: Dict) => string }[] = [
+  { href: '#stack', pick: (d) => d.nav.stack },
+  { href: '#build', pick: (d) => d.nav.services },
+  { href: '#trace', pick: (d) => d.nav.how },
+  { href: '#work', pick: (d) => d.nav.work },
+]
 
 export function Header() {
-  const { t } = useI18n()
   const vw = useViewportWidth()
   const wide = vw >= 860
-
-  const links = [
-    { href: '#stack', label: t.nav.stack },
-    { href: '#build', label: t.nav.services },
-    { href: '#trace', label: t.nav.how },
-    { href: '#work', label: t.nav.work },
-  ]
 
   return (
     <header
@@ -74,29 +79,40 @@ export function Header() {
         }}
       >
         {wide &&
-          links.map((l) => (
-            <a key={l.href} href={l.href} className="nav-link" style={{ whiteSpace: 'nowrap' }}>
-              {l.label}
+          LINKS.map((l) => (
+            <a key={l.href} href={l.href} className="nav-link">
+              <StableLabel pick={l.pick} />
             </a>
           ))}
 
         <LanguageSwitch />
 
-        <a
-          href="#contact"
-          className="btn-hire"
-          style={{
-            whiteSpace: 'nowrap',
-            padding: '7px 14px',
-            border: '1px solid oklch(0.82 0.15 152 / 0.5)',
-            borderRadius: 4,
-            color: c.acc,
-            background: 'oklch(0.82 0.15 152 / 0.08)',
-          }}
-        >
-          {t.nav.hire}
-        </a>
+        <HireButton />
       </nav>
     </header>
+  )
+}
+
+function HireButton() {
+  const { t } = useI18n()
+
+  return (
+    <a
+      href="#contact"
+      className="btn-hire"
+      aria-label={t.nav.hire}
+      style={{
+        display: 'inline-flex',
+        justifyContent: 'center',
+        whiteSpace: 'nowrap',
+        padding: '7px 14px',
+        border: '1px solid oklch(0.82 0.15 152 / 0.5)',
+        borderRadius: 4,
+        color: c.acc,
+        background: 'oklch(0.82 0.15 152 / 0.08)',
+      }}
+    >
+      <StableLabel pick={(d) => d.nav.hire} />
+    </a>
   )
 }

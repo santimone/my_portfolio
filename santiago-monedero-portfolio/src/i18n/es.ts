@@ -27,50 +27,6 @@ export const es: Dict = {
     secondary: 'ver el stack',
   },
 
-  treatments: {
-    label: 'versión',
-    boot: 'consola',
-    statement: 'titular',
-    field: 'red',
-  },
-
-  heroBoot: {
-    badge: 'disponible para freelance',
-    headline: ['Hago la app,', 'la API,', 'y todo lo que'],
-    headlineAccent: 'hay en el medio.',
-    body: 'Desarrollador mobile full-time — React Native y Expo publicados en iOS, Android y Android TV. Como freelance me hago cargo de todo el stack: servicios en NestJS, PostgreSQL y Prisma, pasarelas de pago, CMS headless y el front web encima.',
-    stats: [
-      { value: 'iOS · Android · TV', label: 'plataformas publicadas' },
-      { value: 'de punta a punta', label: 'app → api → base de datos' },
-    ],
-    file: '~/boot.sh',
-    lines: [
-      { kind: 'prompt', text: '$ whoami' },
-      { kind: 'plain', text: 'desarrollador mobile — react native / expo' },
-      { kind: 'blank' },
-      { kind: 'prompt', text: '$ cat ./freelance.json' },
-      { kind: 'punct', text: '{' },
-      { kind: 'accent', text: '  "frontend": ["React", "React Native", "Expo", "TV"],' },
-      { kind: 'accent', text: '  "backend":  ["NestJS", "Express", "Node"],' },
-      { kind: 'accent', text: '  "data":     ["PostgreSQL", "Prisma", "Sanity"],' },
-      { kind: 'accent', text: '  "extras":   ["Mercado Pago", "webhooks", "OTA"]' },
-      { kind: 'punct', text: '}' },
-      { kind: 'blank' },
-      { kind: 'prompt', text: '$ ./availability --check' },
-      { kind: 'accent', text: 'tomando proyectos freelance ✓' },
-    ],
-  },
-
-  heroStatement: {
-    kickerRole: 'mobile · full stack',
-    kickerStatus: 'disponible',
-    headlineTop: 'MOBILE PRIMERO.',
-    headlineDim: 'BACKEND',
-    headlineMid: ' CUANDO',
-    headlineEnd: 'HACE FALTA.',
-    body: 'Desarrollador React Native full-time, publicando en teléfonos y en Android TV. Como freelance me hago cargo de la línea completa: la app, la API en NestJS detrás, el esquema de PostgreSQL debajo, y las integraciones de pagos y CMS que la convierten en un producto y no en una demo.',
-  },
-
   heroField: {
     kicker: `${profile.name.toLowerCase()} — buenos aires · remoto`,
     headline: ['Apps que salen.', 'Backends que aguantan.'],
@@ -415,7 +371,6 @@ export const es: Dict = {
   availability: {
     eyebrow: '06 — disponibilidad',
     heading: 'Cómo se ve trabajar juntos',
-    note: 'Las tarifas son un placeholder — cambialas, o borrá los números y dejá los formatos.',
     items: [
       {
         kind: 'proyecto',
@@ -455,9 +410,11 @@ export const es: Dict = {
     headline: ['Contame qué', 'estás construyendo.'],
     body: 'Con un párrafo alcanza. Te vuelvo con un alcance, un plazo y una lectura honesta de si soy la persona indicada.',
     labels: {
-      email: 'email',
-      github: 'github',
-      instagram: 'instagram',
+      email: 'Email',
+      whatsapp: 'WhatsApp',
+      github: 'GitHub',
+      linkedin: 'LinkedIn',
+      instagram: 'Instagram',
       based: 'ubicación',
       languages: 'idiomas',
     },
@@ -473,12 +430,18 @@ export const es: Dict = {
       project: 'el proyecto',
       projectPlaceholder: 'Qué es, para quién, y para cuándo lo querés en producción.',
       submit: 'enviar →',
+      sending: 'enviando…',
       sentRoute: 'POST /api/contact',
-      sentStatus: '201 Created',
+      sentStatus: '200 OK',
       sentGreeting: 'Listo,',
-      sentBody:
-        'Este formulario es una demo de front end — conectalo a tu casilla o a un servicio de formularios antes de publicar. Mientras tanto, el email funciona.',
+      sentBody: 'Ya está en mi casilla. Te respondo en uno o dos días.',
+      handoffBody:
+        'Se te debería haber abierto el cliente de correo con el mensaje listo — dale enviar ahí y me llega.',
       sendAnother: 'enviar otro',
+      errorStatus: '502 Bad Gateway',
+      errorBody: 'No salió. Mandámelo por email — mismo mensaje, un clic.',
+      errorRetry: 'reintentar',
+      errorMailto: 'abrir el email →',
     },
   },
 

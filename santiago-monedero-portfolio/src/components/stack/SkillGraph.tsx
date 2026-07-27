@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { GRAPH_COLORS, GRAPH_NODES } from '../../data/profile'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 
 interface Node {
   n: string
@@ -15,9 +16,14 @@ interface Node {
  * Force-directed skill graph on a canvas. Nodes repel each other, drift back
  * toward the centre, cluster loosely by group, dodge the cursor, and can be
  * dragged. Everything is drawn by hand — no graph library.
+ *
+ * With "reduce motion" on, the simulation is run to a settled layout once and
+ * drawn as a still frame; dragging and hovering still redraw, because those
+ * are things the visitor asked for.
  */
 export function SkillGraph() {
   const ref = useRef<HTMLCanvasElement | null>(null)
+  const still = usePrefersReducedMotion()
 
   useEffect(() => {
     const cv = ref.current
@@ -40,92 +46,20 @@ export function SkillGraph() {
       r: 0,
     }))
 
-    const resize = () => {
-      const rect = cv.getBoundingClientRect()
-      w = rect.width
-      h = rect.height
-      cv.width = Math.max(1, Math.round(w * dpr))
-      cv.height = Math.max(1, Math.round(h * dpr))
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      if (!placed && w > 0) {
-        nodes.forEach((n, i) => {
-          const a = (i / nodes.length) * Math.PI * 2
-          const rad = Math.min(w, h) * (0.18 + 0.22 * ((i % 3) / 2))
-          n.x = w / 2 + Math.cos(a) * rad
-          n.y = h / 2 + Math.sin(a) * rad
-          n.r = 6 + (5 - n.g) * 0.9
-        })
-        placed = true
-      }
-    }
-
-    resize()
-    window.addEventListener('resize', resize)
-
     let drag: Node | null = null
     const mouse = { x: -9999, y: -9999 }
 
-    const pointFrom = (e: MouseEvent | TouchEvent) => {
-      const r = cv.getBoundingClientRect()
-      const t = 'touches' in e ? e.touches[0] : e
-      return { x: t.clientX - r.left, y: t.clientY - r.top }
+    const layout = () => {
+      nodes.forEach((n, i) => {
+        const a = (i / nodes.length) * Math.PI * 2
+        const rad = Math.min(w, h) * (0.18 + 0.22 * ((i % 3) / 2))
+        n.x = w / 2 + Math.cos(a) * rad
+        n.y = h / 2 + Math.sin(a) * rad
+        n.r = 6 + (5 - n.g) * 0.9
+      })
     }
 
-    const onDown = (e: MouseEvent | TouchEvent) => {
-      const p = pointFrom(e)
-      mouse.x = p.x
-      mouse.y = p.y
-      let best: Node | null = null
-      let bd = Infinity
-      for (const n of nodes) {
-        const d = Math.hypot(n.x - p.x, n.y - p.y)
-        if (d < bd && d < 46) {
-          bd = d
-          best = n
-        }
-      }
-      if (best) {
-        drag = best
-        cv.style.cursor = 'grabbing'
-        e.preventDefault()
-      }
-    }
-
-    const onMove = (e: MouseEvent | TouchEvent) => {
-      const p = pointFrom(e)
-      mouse.x = p.x
-      mouse.y = p.y
-      if (drag) {
-        drag.x = p.x
-        drag.y = p.y
-        drag.vx = 0
-        drag.vy = 0
-        e.preventDefault()
-      }
-    }
-
-    const onUp = () => {
-      drag = null
-      cv.style.cursor = 'grab'
-    }
-
-    const onLeave = () => {
-      mouse.x = -9999
-      mouse.y = -9999
-    }
-
-    cv.addEventListener('mousedown', onDown)
-    cv.addEventListener('touchstart', onDown, { passive: false })
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('touchmove', onMove, { passive: false })
-    window.addEventListener('mouseup', onUp)
-    window.addEventListener('touchend', onUp)
-    cv.addEventListener('mouseleave', onLeave)
-
-    let raf = 0
-    const step = () => {
-      if (w === 0) resize()
-
+    const simulate = () => {
       for (const n of nodes) {
         if (n === drag) continue
 
@@ -185,7 +119,9 @@ export function SkillGraph() {
           n.vy *= -0.4
         }
       }
+    }
 
+    const render = () => {
       ctx.clearRect(0, 0, w, h)
 
       for (let a = 0; a < nodes.length; a++) {
@@ -222,13 +158,108 @@ export function SkillGraph() {
         ctx.textBaseline = 'top'
         ctx.fillText(n.n, n.x, n.y + n.r + 6)
       }
+    }
 
+    /** Fast-forward to a settled arrangement without showing the motion. */
+    const settle = () => {
+      for (let i = 0; i < 600; i++) simulate()
+      render()
+    }
+
+    const resize = () => {
+      const rect = cv.getBoundingClientRect()
+      w = rect.width
+      h = rect.height
+      cv.width = Math.max(1, Math.round(w * dpr))
+      cv.height = Math.max(1, Math.round(h * dpr))
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      if (!placed && w > 0) {
+        layout()
+        placed = true
+        if (still) settle()
+      } else if (still) {
+        render()
+      }
+    }
+
+    resize()
+    window.addEventListener('resize', resize)
+
+    const pointFrom = (e: MouseEvent | TouchEvent) => {
+      const r = cv.getBoundingClientRect()
+      const t = 'touches' in e ? e.touches[0] : e
+      return { x: t.clientX - r.left, y: t.clientY - r.top }
+    }
+
+    const onDown = (e: MouseEvent | TouchEvent) => {
+      const p = pointFrom(e)
+      mouse.x = p.x
+      mouse.y = p.y
+      let best: Node | null = null
+      let bd = Infinity
+      for (const n of nodes) {
+        const d = Math.hypot(n.x - p.x, n.y - p.y)
+        if (d < bd && d < 46) {
+          bd = d
+          best = n
+        }
+      }
+      if (best) {
+        drag = best
+        cv.style.cursor = 'grabbing'
+        e.preventDefault()
+      }
+      if (still) render()
+    }
+
+    const onMove = (e: MouseEvent | TouchEvent) => {
+      const p = pointFrom(e)
+      mouse.x = p.x
+      mouse.y = p.y
+      if (drag) {
+        drag.x = p.x
+        drag.y = p.y
+        drag.vx = 0
+        drag.vy = 0
+        e.preventDefault()
+      }
+      // no rAF loop is running in reduced-motion mode, so redraw on demand
+      if (still) render()
+    }
+
+    const onUp = () => {
+      drag = null
+      cv.style.cursor = 'grab'
+      if (still) render()
+    }
+
+    const onLeave = () => {
+      mouse.x = -9999
+      mouse.y = -9999
+      if (still) render()
+    }
+
+    cv.addEventListener('mousedown', onDown)
+    cv.addEventListener('touchstart', onDown, { passive: false })
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('touchmove', onMove, { passive: false })
+    window.addEventListener('mouseup', onUp)
+    window.addEventListener('touchend', onUp)
+    cv.addEventListener('mouseleave', onLeave)
+
+    let raf = 0
+    if (!still) {
+      const step = () => {
+        if (w === 0) resize()
+        simulate()
+        render()
+        raf = requestAnimationFrame(step)
+      }
       raf = requestAnimationFrame(step)
     }
-    raf = requestAnimationFrame(step)
 
     return () => {
-      cancelAnimationFrame(raf)
+      if (raf) cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
       cv.removeEventListener('mousedown', onDown)
       cv.removeEventListener('touchstart', onDown)
@@ -238,7 +269,7 @@ export function SkillGraph() {
       window.removeEventListener('touchend', onUp)
       cv.removeEventListener('mouseleave', onLeave)
     }
-  }, [])
+  }, [still])
 
   return (
     <canvas

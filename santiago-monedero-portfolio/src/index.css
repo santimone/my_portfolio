@@ -164,6 +164,30 @@ button {
   color: oklch(0.45 0.01 250);
 }
 
+/* contact list: accent logo, readable label, whole row lights up on hover */
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: oklch(0.86 0.01 250);
+  transition: color 160ms ease;
+}
+.contact-row:hover {
+  color: oklch(0.88 0.16 152);
+}
+.contact-row svg {
+  color: oklch(0.82 0.15 152);
+}
+
+/* off-screen honeypot — bots fill it, people never see it */
+.honey {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* on tiny screens the header sheds the "/dev" suffix, then the EN/ES codes —
    the flags alone still identify the language, and the buttons keep aria-labels */
 @media (max-width: 480px) {

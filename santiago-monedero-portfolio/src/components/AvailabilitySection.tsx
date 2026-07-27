@@ -104,10 +104,6 @@ export function AvailabilitySection() {
             )
           })}
         </div>
-
-        <div style={{ marginTop: 20, fontFamily: mono, fontSize: 12, color: 'oklch(0.55 0.01 250)' }}>
-          {t.availability.note}
-        </div>
       </div>
     </section>
   )

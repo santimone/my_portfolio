@@ -13,18 +13,31 @@ npm run preview
 npm run lint
 ```
 
-## Before you publish
+Everything personal lives in one file:
+[`src/data/profile.ts`](src/data/profile.ts) — name, email, WhatsApp, GitHub,
+LinkedIn, Instagram, time zone.
 
-Everything personal lives in one file: [`src/data/profile.ts`](src/data/profile.ts)
-— name, email, GitHub, Instagram, time zone.
+## Contact form
 
-Two things are still unfinished by design:
+The form posts to [Web3Forms](https://web3forms.com), which forwards the message
+to the registered inbox. No backend, no server to keep alive.
 
-- **The contact form is front-end only.** It fakes a `201 Created` and says so
-  in its own success state. Point it at your inbox or a form service
-  (Formspree, Web3Forms, a Worker) before launch.
-- **Rates in the availability section are formats, not numbers**, and the page
-  admits it. Fill them in or delete the note.
+**Setup:** get a free access key (enter the destination email, confirm it), then
+
+```bash
+cp .env.example .env
+# paste the key into VITE_WEB3FORMS_KEY
+```
+
+and add the same `VITE_WEB3FORMS_KEY` variable to the Cloudflare Pages project
+(Settings → Variables) so production builds get it too.
+
+The key is public by design — it only permits submitting to the address it was
+registered with. A hidden honeypot field catches the bots that fill everything.
+
+**Without a key the form still works**: it opens the visitor's mail client with
+the message pre-filled and says so, rather than pretending to deliver. Same if
+the POST fails — the error state offers the mail client as a one-click fallback.
 
 ## Languages
 
@@ -51,6 +64,10 @@ Copy lives in [`src/i18n/en.ts`](src/i18n/en.ts) and
 [`src/i18n/types.ts`](src/i18n/types.ts), so a missing translation is a type
 error rather than a blank spot on the page.
 
+Header labels are wrapped in `StableLabel`, which stacks both languages in one
+grid cell so the cell sizes to the wider of the two. Without it, switching to
+Spanish ("services" → "servicios") pushes everything to its right along.
+
 ## Layout
 
 ```
@@ -58,15 +75,17 @@ src/
   theme.ts              colour tokens, shared type styles
   index.css             globals, keyframes, hover/focus classes
   data/profile.ts       name, links, skill-graph nodes, proficiency numbers
+  lib/sendContact.ts    Web3Forms POST + mailto fallback
   i18n/                 dictionaries, detection, provider, useI18n
-  hooks/                viewport, scroll progress, in-view, typed list, reduced motion
+  hooks/                viewport, scroll progress, in-view, reduced motion
   components/
-    heroes/             three interchangeable hero treatments
-    stack/              tree / depth / force-directed graph views
+    heroes/             particle-field hero
+    stack/              graph (default) / tree / depth views
     ...                 services, trace, work, about, availability, contact
 ```
 
 Three interactive pieces are hand-written canvas/scroll work rather than
-libraries: the particle field behind the "field" hero, the draggable
-force-directed skill graph, and the sticky scroll-driven request walkthrough.
-All of them respect `prefers-reduced-motion`.
+libraries: the particle field behind the hero, the draggable force-directed
+skill graph, and the sticky scroll-driven request walkthrough. All three respect
+`prefers-reduced-motion` — the graph in particular runs its simulation to a
+settled layout and draws one still frame, then only redraws on hover or drag.
