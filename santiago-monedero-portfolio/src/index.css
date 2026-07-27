@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: oklch(0.15 0.006 250);
+  color: oklch(0.93 0.008 250);
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: oklch(0.82 0.15 152);
+  text-decoration: none;
+}
+
+a:hover {
+  color: oklch(0.9 0.16 152);
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: oklch(0.82 0.15 152);
+  color: oklch(0.15 0.006 250);
+}
+
+:focus-visible {
+  outline: 2px solid oklch(0.82 0.15 152);
+  outline-offset: 2px;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.82 0.15 152 / 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px oklch(0.82 0.15 152 / 0);
+  }
+}
+
+@keyframes marq {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hover / focus states.
+   The design canvas expressed these as `style-hover` attributes; in React they
+   live here as classes so the inline style objects stay static.
+   --------------------------------------------------------------------------- */
+
+.nav-link {
+  color: oklch(0.66 0.01 250);
+  transition: color 160ms ease;
+}
+.nav-link:hover {
+  color: oklch(0.93 0.008 250);
+}
+
+.btn-primary {
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+.btn-primary:hover {
+  background: oklch(0.88 0.16 152);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  transition:
+    border-color 180ms ease,
+    background 180ms ease;
+}
+.btn-secondary:hover {
+  border-color: oklch(0.5 0.01 250);
+  background: oklch(0.19 0.007 250);
+}
+
+.btn-outline {
+  transition: border-color 180ms ease;
+}
+.btn-outline:hover {
+  border-color: oklch(0.5 0.01 250);
+}
+
+.btn-hire {
+  transition: background 180ms ease;
+}
+.btn-hire:hover {
+  background: oklch(0.82 0.15 152 / 0.18);
+}
+
+.card-hover {
+  transition: border-color 220ms ease;
+}
+.card-hover:hover {
+  border-color: oklch(0.38 0.03 152);
+}
+
+.tree-item {
+  color: oklch(0.78 0.01 250);
+  transition: color 140ms ease;
+}
+.tree-item:hover {
+  color: oklch(0.96 0.01 250);
+}
+
+.service-cell {
+  transition: background 200ms ease;
+}
+.service-cell:hover {
+  background: oklch(0.19 0.008 250);
+}
+
+.hint-pill {
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+.hint-pill:hover {
+  border-color: oklch(0.82 0.15 152 / 0.5);
+  color: oklch(0.82 0.15 152);
+}
+
+.field {
+  transition: border-color 160ms ease;
+}
+.field:focus {
+  border-color: oklch(0.82 0.15 152);
+}
+
+.field::placeholder {
+  color: oklch(0.45 0.01 250);
+}
+
+/* the "/dev" suffix in the logo is the first thing to go on tiny screens */
+@media (max-width: 420px) {
+  .logo-suffix {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
