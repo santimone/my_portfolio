@@ -193,7 +193,7 @@ export interface Dict {
     labels: {
       email: string
       github: string
-      linkedin: string
+      instagram: string
       based: string
       languages: string
     }

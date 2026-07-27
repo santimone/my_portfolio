@@ -15,12 +15,16 @@ npm run lint
 
 ## Before you publish
 
-Everything personal lives in one file: [`src/data/profile.ts`](src/data/profile.ts).
-The email, GitHub and LinkedIn values there are **placeholders** — swap them for
-the real ones. The contact form is front-end only; point it at your inbox or a
-form service (Formspree, Web3Forms, a Worker, …) before launch.
+Everything personal lives in one file: [`src/data/profile.ts`](src/data/profile.ts)
+— name, email, GitHub, Instagram, time zone.
 
-Rates in the availability section are placeholders too, and say so on the page.
+Two things are still unfinished by design:
+
+- **The contact form is front-end only.** It fakes a `201 Created` and says so
+  in its own success state. Point it at your inbox or a form service
+  (Formspree, Web3Forms, a Worker) before launch.
+- **Rates in the availability section are formats, not numbers**, and the page
+  admits it. Fill them in or delete the note.
 
 ## Languages
 
@@ -37,6 +41,10 @@ language is picked in [`src/i18n/detect.ts`](src/i18n/detect.ts), in this order:
 Location detection is entirely local: no geo-IP request, nothing to consent to,
 and it works offline. Someone in Buenos Aires running an English OS still gets
 English, because a stated preference beats a location guess.
+
+The switch itself uses inline SVG flags (`src/components/Flags.tsx`) rather than
+emoji, because Windows has no flag glyphs — 🇬🇧 renders there as the letters
+"GB". Union Jack for English, Argentine flag for Spanish.
 
 Copy lives in [`src/i18n/en.ts`](src/i18n/en.ts) and
 [`src/i18n/es.ts`](src/i18n/es.ts); both satisfy the `Dict` interface in

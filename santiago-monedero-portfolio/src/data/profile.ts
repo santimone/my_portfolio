@@ -1,24 +1,21 @@
 /**
  * ┌──────────────────────────────────────────────────────────────────────────┐
  * │  EDIT ME — everything personal lives here and nowhere else.              │
- * │  The email / github / linkedin values below are PLACEHOLDERS. Swap them  │
- * │  for the real ones before you put this online.                           │
  * └──────────────────────────────────────────────────────────────────────────┘
  */
 export const profile = {
   name: 'Santiago Monedero',
   handle: 'santiago.monedero',
 
-  // TODO: replace with the address you actually want clients writing to.
-  email: 'hola@santiagomonedero.dev',
+  email: 'santiagomonedero122@gmail.com',
 
   github: {
-    url: 'https://github.com/santiagomonedero',
-    label: 'github.com/santiagomonedero',
+    url: 'https://github.com/santimone',
+    label: 'github.com/santimone',
   },
-  linkedin: {
-    url: 'https://linkedin.com/in/santiagomonedero',
-    label: 'in/santiagomonedero',
+  instagram: {
+    url: 'https://www.instagram.com/santiagomonedero/',
+    label: '@santiagomonedero',
   },
 
   /** IANA zone used for the footer clock, so it reads Buenos Aires time for everyone. */

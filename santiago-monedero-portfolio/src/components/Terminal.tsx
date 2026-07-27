@@ -105,7 +105,7 @@ export function Terminal() {
         case key === 'contact':
           out.push(
             acc(profile.email),
-            nor(`${profile.github.label}  ·  ${profile.linkedin.label}`),
+            nor(`${profile.github.label}  ·  instagram ${profile.instagram.label}`),
             dim(term.contactLocation),
             blank(),
           )

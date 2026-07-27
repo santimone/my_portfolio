@@ -137,13 +137,13 @@ export function ContactSection() {
               {profile.github.label}
             </a>
             <a
-              href={profile.linkedin.url}
+              href={profile.instagram.url}
               target="_blank"
               rel="noreferrer"
               style={{ display: 'flex', gap: 12 }}
             >
-              <span style={{ color: c.textFaint, minWidth: 74 }}>{t.contact.labels.linkedin}</span>
-              {profile.linkedin.label}
+              <span style={{ color: c.textFaint, minWidth: 74 }}>{t.contact.labels.instagram}</span>
+              {profile.instagram.label}
             </a>
             {contactRow(
               t.contact.labels.based,

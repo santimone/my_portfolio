@@ -164,7 +164,14 @@ button {
   color: oklch(0.45 0.01 250);
 }
 
-/* the "/dev" suffix in the logo is the first thing to go on tiny screens */
+/* on tiny screens the header sheds the "/dev" suffix, then the EN/ES codes —
+   the flags alone still identify the language, and the buttons keep aria-labels */
+@media (max-width: 480px) {
+  .lang-code {
+    display: none;
+  }
+}
+
 @media (max-width: 420px) {
   .logo-suffix {
     display: none;

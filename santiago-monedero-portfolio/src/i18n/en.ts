@@ -453,7 +453,7 @@ export const en: Dict = {
     labels: {
       email: 'email',
       github: 'github',
-      linkedin: 'linkedin',
+      instagram: 'instagram',
       based: 'based',
       languages: 'languages',
     },
