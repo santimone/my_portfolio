@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useI18n } from '../i18n/useI18n'
 import { c, eyebrow, h2, mono, shell, sectionPad } from '../theme'
 import { Tag } from './Tag'
@@ -6,6 +7,29 @@ import { Tag } from './Tag'
 export function WorkSection() {
   const { t } = useI18n()
   const [open, setOpen] = useState(0)
+  const reduced = usePrefersReducedMotion()
+
+  /**
+   * Every open panel is given the same height — the tallest case body — so
+   * switching cases never reflows the rest of the page. Because the closing and
+   * opening panels share that height, duration and easing, the pixels one gives
+   * up are exactly the pixels the other takes: the section height holds still.
+   */
+  const bodies = useRef<Array<HTMLDivElement | null>>([])
+  const [panelH, setPanelH] = useState(0)
+
+  const measure = useCallback(() => {
+    let tallest = 0
+    for (const el of bodies.current) if (el) tallest = Math.max(tallest, el.offsetHeight)
+    setPanelH((prev) => (Math.abs(prev - tallest) > 1 ? tallest : prev))
+  }, [])
+
+  useLayoutEffect(() => {
+    measure()
+    const ro = new ResizeObserver(measure)
+    for (const el of bodies.current) if (el) ro.observe(el)
+    return () => ro.disconnect()
+  }, [measure, t])
 
   const colLabel: React.CSSProperties = {
     fontFamily: mono,
@@ -126,20 +150,29 @@ export function WorkSection() {
                 <div
                   id={panelId}
                   style={{
-                    maxHeight: isOpen ? 520 : 0,
-                    opacity: isOpen ? 1 : 0,
-                    transition:
-                      'max-height 420ms cubic-bezier(0.22,1,0.36,1), opacity 300ms ease',
+                    height: isOpen ? panelH || 'auto' : 0,
                     overflow: 'hidden',
+                    transition: reduced
+                      ? 'none'
+                      : 'height 420ms cubic-bezier(0.22,1,0.36,1)',
                   }}
                 >
                   <div
+                    ref={(el) => {
+                      bodies.current[i] = el
+                    }}
                     style={{
                       padding:
                         '0 clamp(18px, 2.4vw, 26px) clamp(22px, 2.6vw, 28px) clamp(50px, 5vw, 74px)',
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
                       gap: 22,
+                      alignContent: 'start',
+                      opacity: isOpen ? 1 : 0,
+                      transform: isOpen ? 'translateY(0)' : 'translateY(-6px)',
+                      transition: reduced
+                        ? 'none'
+                        : 'opacity 300ms ease 80ms, transform 420ms cubic-bezier(0.22,1,0.36,1)',
                     }}
                   >
                     <div>
