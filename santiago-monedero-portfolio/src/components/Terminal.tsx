@@ -87,6 +87,10 @@ export function Terminal() {
           out.push(blank())
           break
 
+        case key === 'web':
+          out.push(nor(term.web[0]), dim(term.web[1]), dim(term.web[2]), blank())
+          break
+
         case key === 'mobile':
           out.push(nor(term.mobile[0]), dim(term.mobile[1]), dim(term.mobile[2]), blank())
           break

@@ -3,9 +3,9 @@ import type { Dict } from './types'
 
 export const en: Dict = {
   meta: {
-    title: `${profile.name} — Mobile & full-stack developer`,
+    title: `${profile.name} — Full-stack developer, web and mobile`,
     description:
-      'React Native and Expo shipped to iOS, Android and Android TV. Freelance full stack: NestJS, PostgreSQL, Prisma, payments and headless CMS.',
+      'Full-stack development with React, TypeScript, NestJS, PostgreSQL and Prisma, plus React Native apps for iOS, Android and Android TV. Freelance, based in Buenos Aires.',
   },
 
   nav: {
@@ -29,27 +29,17 @@ export const en: Dict = {
 
   heroField: {
     kicker: `${profile.name.toLowerCase()} — buenos aires · remote`,
-    headline: ['Apps that ship.', 'Backends that hold.'],
-    body: 'React Native by day, full stack by contract. Move your cursor — every node is something I work with.',
+    headline: ['Web and mobile,', 'built end to end.'],
+    body: 'Full-stack developer in Buenos Aires — React and TypeScript on the front, NestJS and PostgreSQL behind it, React Native when a product needs an app. Move your cursor: every node is part of the stack.',
   },
 
   stack: {
     eyebrow: '01 — the stack',
-    heading: 'What I actually reach for',
+    heading: 'The stack I work with',
     views: { tree: 'tree', depth: 'depth', graph: 'graph' },
     itemsSuffix: 'items',
-    graphHint: 'drag any node — physics, not decoration',
+    graphHint: 'drag any node to explore the stack',
     groups: [
-      {
-        dir: 'mobile/',
-        items: [
-          { name: 'React Native', note: 'daily' },
-          { name: 'Expo + EAS', note: 'builds, OTA' },
-          { name: 'Android TV / tvOS', note: 'focus nav' },
-          { name: 'native pipelines', note: 'signing, stores' },
-          { name: 'offline state', note: 'persistence' },
-        ],
-      },
       {
         dir: 'frontend/',
         items: [
@@ -80,6 +70,16 @@ export const en: Dict = {
         ],
       },
       {
+        dir: 'mobile/',
+        items: [
+          { name: 'React Native', note: 'daily' },
+          { name: 'Expo + EAS', note: 'builds, OTA' },
+          { name: 'Android TV / tvOS', note: 'focus nav' },
+          { name: 'native pipelines', note: 'signing, stores' },
+          { name: 'offline state', note: 'persistence' },
+        ],
+      },
+      {
         dir: 'tooling/',
         items: [
           { name: 'Git', note: 'daily' },
@@ -102,7 +102,7 @@ export const en: Dict = {
         key: 'react',
         name: 'React',
         label: 'daily · production',
-        note: 'Component architecture, state, performance on real client apps.',
+        note: 'Component architecture, state and performance on production web apps.',
       },
       {
         key: 'ts',
@@ -138,7 +138,7 @@ export const en: Dict = {
         key: 'cms',
         name: 'Sanity / headless CMS',
         label: 'shipped',
-        note: 'Content modelling decoupled from the app UI.',
+        note: 'Content modelling decoupled from the application UI.',
       },
       {
         key: 'git',
@@ -161,62 +161,62 @@ export const en: Dict = {
     items: [
       {
         num: '/01',
-        title: 'Mobile apps, start to store',
-        body: 'A React Native app built on Expo, released to iOS and Android — including the build pipeline, signing and OTA updates most quotes leave out.',
-        tags: ['React Native', 'Expo', 'EAS'],
+        title: 'Web applications',
+        body: 'React and TypeScript front ends, from a client-facing product to the admin panel and reporting views your team uses every day.',
+        tags: ['React', 'TypeScript'],
       },
       {
         num: '/02',
-        title: 'Smart TV & Android TV apps',
-        body: 'Remote-driven interfaces with real focus navigation and layouts built for a screen across the room. Very few developers do this well.',
-        tags: ['Android TV', 'focus nav'],
+        title: 'APIs and backends',
+        body: 'NestJS or Express services with typed contracts, validated input and a PostgreSQL schema designed around the queries it will have to serve.',
+        tags: ['NestJS', 'Prisma', 'PostgreSQL'],
       },
       {
         num: '/03',
-        title: 'APIs and backends',
-        body: 'NestJS or Express services with typed contracts, validated input and a PostgreSQL schema designed by someone who will have to query it later.',
-        tags: ['NestJS', 'Prisma', 'PostgreSQL'],
+        title: 'Mobile apps, start to store',
+        body: 'A React Native app built on Expo and released to iOS and Android, including the build pipeline, code signing and OTA updates.',
+        tags: ['React Native', 'Expo', 'EAS'],
       },
       {
         num: '/04',
         title: 'Payments and integrations',
-        body: 'Mercado Pago and similar gateways wired properly: preferences, redirects, webhooks, idempotency and the failure states nobody tests.',
+        body: 'Mercado Pago and similar gateways integrated end to end: preferences, redirects, webhooks, idempotency and the failure states that follow.',
         tags: ['Mercado Pago', 'webhooks'],
       },
       {
         num: '/05',
-        title: 'Web apps and dashboards',
-        body: 'React front ends for the people running the business — the admin panel, the reporting view, the internal tool that keeps getting postponed.',
-        tags: ['React', 'TypeScript'],
+        title: 'Smart TV & Android TV apps',
+        body: 'Remote-driven interfaces with proper spatial focus navigation and layouts designed for viewing across a room.',
+        tags: ['Android TV', 'focus nav'],
       },
       {
         num: '/06',
         title: 'Content-driven sites',
-        body: 'Sanity or another headless CMS behind a fast React front end, so your team edits content without opening a ticket.',
+        body: 'Sanity or another headless CMS behind a fast React front end, so your team publishes content without a developer or a deploy.',
         tags: ['Sanity.io', 'React'],
       },
     ],
   },
 
   trace: {
-    eyebrow: '03 — one tap, end to end',
-    heading: 'Scroll to follow a single request through everything I own',
+    eyebrow: '03 — one request, end to end',
+    heading: 'Follow a single request through the whole stack',
     stages: [
       {
         num: '01',
-        name: 'Mobile app',
-        tech: 'React Native · Expo',
-        headline: 'A tap on a phone, or a click on a TV remote',
-        body: 'The screen is React Native, running the same codebase on iOS, Android and Android TV. Focus navigation, offline state and optimistic UI are handled before the request ever leaves the device.',
-        file: 'app/screens/Checkout.tsx',
-        code: 'const submit = async () => {\n  setPending(true)\n  const res = await api.post(\n    "/orders", { items, method }\n  )\n  navigate("Status", { id: res.id })\n}',
+        name: 'Client',
+        tech: 'React · React Native',
+        headline: 'A form submitted in the browser, or a tap in the app',
+        body: 'The same interface logic runs in React on the web and in React Native on iOS, Android and Android TV. Validation, optimistic updates and offline state are handled before the request leaves the client.',
+        file: 'src/checkout/Checkout.tsx',
+        code: 'const submit = async () => {\n  setPending(true)\n  const res = await api.post(\n    "/orders", { items, method }\n  )\n  goTo("status", { id: res.id })\n}',
       },
       {
         num: '02',
         name: 'API layer',
         tech: 'NestJS · Express',
-        headline: 'A typed endpoint that refuses bad input',
-        body: 'NestJS modules keep the surface small: a controller, a DTO that validates the body, a service that owns the rules. Nothing reaches the database in a shape it did not expect.',
+        headline: 'A typed endpoint that validates before it accepts',
+        body: 'NestJS modules keep the surface small: a controller, a DTO that validates the body, and a service that owns the rules. Nothing reaches the database in a shape it was not expecting.',
         file: 'src/orders/orders.controller.ts',
         code: '@Post()\n@UsePipes(new ValidationPipe())\ncreate(@Body() dto: CreateOrderDto) {\n  return this.orders.create(dto)\n}',
       },
@@ -224,8 +224,8 @@ export const en: Dict = {
         num: '03',
         name: 'Business logic',
         tech: 'Service layer',
-        headline: 'Where the product actually lives',
-        body: 'Pricing, availability, payment intent creation, retries. This is the layer worth writing carefully, because every client of the API inherits whatever decisions get made here.',
+        headline: 'Where the product rules live',
+        body: 'Pricing, availability, payment intent creation and retries. This is the layer worth writing carefully, because every client of the API inherits the decisions made here.',
         file: 'src/orders/orders.service.ts',
         code: 'async create(dto: CreateOrderDto) {\n  const total = price(dto.items)\n  const pay = await mp.preference(total)\n  return this.db.order.create({\n    data: { ...dto, total, ref: pay.id }\n  })\n}',
       },
@@ -233,17 +233,17 @@ export const en: Dict = {
         num: '04',
         name: 'Data layer',
         tech: 'Prisma · PostgreSQL',
-        headline: 'A schema that survives the next feature',
-        body: 'Prisma models describe the tables, migrations move them forward safely, and indexes exist because someone thought about the query before it got slow.',
+        headline: 'A schema built for the next feature',
+        body: 'Prisma models describe the tables, migrations move them forward safely, and indexes are chosen for the queries the application actually runs.',
         file: 'prisma/schema.prisma',
         code: 'model Order {\n  id      String  @id @default(cuid())\n  total   Decimal\n  status  Status  @default(PENDING)\n  ref     String  @unique\n  @@index([status, createdAt])\n}',
       },
       {
         num: '05',
-        name: 'Back to the device',
+        name: 'Back to the client',
         tech: 'Webhooks · OTA',
-        headline: 'The gateway calls back, the app updates itself',
-        body: 'Mercado Pago posts the result to a webhook, the order transitions, and the app reflects it. Expo OTA pushes fixes to users without waiting on a store review.',
+        headline: 'The gateway calls back and the client updates',
+        body: 'Mercado Pago posts the result to a webhook, the order changes state, and both the web app and the mobile app reflect it. Expo OTA delivers mobile fixes without waiting on a store review.',
         file: 'src/payments/webhook.controller.ts',
         code: '@Post("mp")\nasync webhook(@Body() body: MpEvent) {\n  await this.orders.settle(body.data.id)\n  return { received: true }\n}',
       },
@@ -252,74 +252,74 @@ export const en: Dict = {
 
   work: {
     eyebrow: '04 — selected work',
-    heading: 'Under NDA, described honestly',
+    heading: 'Recent work, described within NDA',
     intro:
-      "Most of what I've shipped belongs to employers and clients, so here's the shape of the problem and what I did about it — no logos, no screenshots.",
+      'Most of what I have shipped belongs to employers and clients, so each entry describes the problem and what I built — without logos or screenshots.',
     labels: { problem: 'problem', approach: 'what I did', stack: 'stack' },
     cases: [
       {
         num: '01',
-        title: 'Cross-platform app shipped to iOS and Android',
-        meta: 'React Native · Expo · client-facing product',
+        title: 'Live audience prediction and tracking system',
+        meta: 'High-volume writes · real-time evaluation',
         problem:
-          'A client needed one product on both stores with a small team and no appetite for maintaining two native codebases.',
+          'Thousands of people submitting predictions during a live event, all of which had to be stored, scored and shown back while the event was still running.',
         approach:
-          'Built and released a React Native app on Expo with custom UI components, persisted state and a native build pipeline handling signing and store submissions.',
-        tags: ['React Native', 'Expo', 'EAS', 'TypeScript'],
+          'Designed a PostgreSQL schema for high-volume submissions and built the evaluation path that scores entries and updates standings in real time.',
+        tags: ['PostgreSQL', 'Node.js', 'React', 'Prisma'],
       },
       {
         num: '02',
-        title: 'Smart TV interface with remote-first navigation',
-        meta: 'React Native for Android TV · 10-foot UI',
-        problem:
-          'TV is a different product: no touch, a D-pad, and a viewer sitting three metres away. Standard mobile layouts and focus behaviour break immediately.',
-        approach:
-          'Developed a React Native app targeting Android TV, handling spatial focus navigation, remote input mapping and layouts optimised for large screens and long viewing distance.',
-        tags: ['React Native', 'Android TV', 'focus nav'],
-      },
-      {
-        num: '03',
-        title: 'Payment gateway wired into a management platform',
+        title: 'Payment gateway integrated into a management platform',
         meta: 'Mercado Pago · webhooks · NestJS',
         problem:
-          'Transactions were being reconciled by hand, so status was always out of date and mistakes cost real money.',
+          'Transactions were reconciled by hand, so status was always out of date and mistakes were expensive to correct.',
         approach:
           'Implemented the payment flow end to end — preference creation, redirect handling and webhook listeners that move an order through its states automatically and idempotently.',
         tags: ['NestJS', 'Mercado Pago', 'webhooks', 'PostgreSQL'],
       },
       {
-        num: '04',
-        title: 'Live audience prediction and tracking system',
-        meta: 'High-volume writes · real-time evaluation',
-        problem:
-          'Thousands of people submitting predictions during a live event, all needing to be stored, scored and shown back while the event was still running.',
-        approach:
-          'Designed a custom PostgreSQL schema for high-volume submissions and built the evaluation path that scores entries and updates standings in real time.',
-        tags: ['PostgreSQL', 'Node.js', 'React', 'Prisma'],
-      },
-      {
-        num: '05',
+        num: '03',
         title: 'Headless CMS behind a marketing platform',
         meta: 'Sanity.io · React front end',
         problem:
-          'Content changes required a developer and a deploy, which made the team slow and the developer a bottleneck.',
+          'Every content change required a developer and a deploy, which slowed the team down and made the developer a bottleneck.',
         approach:
           'Integrated Sanity.io as the content layer, modelled the schemas around how the team actually writes, and decoupled administration from the application UI.',
         tags: ['Sanity.io', 'React', 'TypeScript'],
+      },
+      {
+        num: '04',
+        title: 'Cross-platform app shipped to iOS and Android',
+        meta: 'React Native · Expo · client-facing product',
+        problem:
+          'A client needed one product on both stores with a small team, and maintaining two native codebases was not an option.',
+        approach:
+          'Built and released a React Native app on Expo with custom UI components, persisted state and a native build pipeline handling signing and store submissions.',
+        tags: ['React Native', 'Expo', 'EAS', 'TypeScript'],
+      },
+      {
+        num: '05',
+        title: 'Smart TV interface with remote-first navigation',
+        meta: 'React Native for Android TV · 10-foot UI',
+        problem:
+          'TV is a different product: no touch, a D-pad, and a viewer sitting three metres away. Mobile layouts and focus behaviour do not transfer.',
+        approach:
+          'Developed a React Native app targeting Android TV, handling spatial focus navigation, remote input mapping and layouts optimised for large screens and long viewing distance.',
+        tags: ['React Native', 'Android TV', 'focus nav'],
       },
     ],
   },
 
   about: {
     eyebrow: '05 — about',
-    heading: 'I like the parts other people hand off',
+    heading: 'The parts of a project I take on',
     paragraphs: [
-      "Native build pipelines. Focus navigation on a TV remote. Webhook states that only fail in production. Schema migrations nobody wants to own. That's the work I'm good at, and it's why clients keep me past the first project.",
-      'Day job is mobile — React Native and Expo, shipped to iOS, Android and Android TV. Freelance is whatever the product needs: NestJS or Express behind it, PostgreSQL and Prisma underneath, Sanity for content, Mercado Pago when money moves.',
+      'Build pipelines, webhook state machines, schema migrations, focus navigation on a TV remote — the parts of a project that are easy to postpone and expensive to get wrong. That is the work I am good at, and it is why clients stay past the first project.',
+      'Full-time I work in mobile: React Native and Expo, shipped to iOS, Android and Android TV. Freelance is mostly web and full stack: React and TypeScript on the front, NestJS or Express behind it, PostgreSQL and Prisma underneath, Sanity for content and Mercado Pago when payments are involved.',
     ],
     facts: [
       { k: 'full-time', v: 'Mobile developer' },
-      { k: 'freelance', v: 'Full stack, open' },
+      { k: 'freelance', v: 'Web & full stack, open' },
       { k: 'based', v: `Buenos Aires · ${profile.utcOffsetLabel}` },
       { k: 'languages', v: 'Spanish · English' },
     ],
@@ -328,11 +328,12 @@ export const en: Dict = {
 
   terminal: {
     title: 'guest@portfolio — zsh',
-    welcome: 'Welcome. This terminal is real — try `help`.',
+    welcome: 'Welcome. This terminal works — type `help` for the commands.',
     helpIntro: 'available commands:',
     help: [
       { cmd: 'whoami', desc: 'who is behind this page' },
       { cmd: 'stack', desc: 'everything I work with' },
+      { cmd: 'web', desc: 'the web and full-stack side' },
       { cmd: 'mobile', desc: 'the mobile specialisation' },
       { cmd: 'projects', desc: 'what I have shipped' },
       { cmd: 'rates', desc: 'how engagements work' },
@@ -342,15 +343,20 @@ export const en: Dict = {
       { cmd: 'clear', desc: 'wipe the screen' },
     ],
     whoami: [
-      'Mobile developer, full-time. Full-stack freelancer, by contract.',
-      'React Native by day; NestJS, Postgres and Prisma when a project needs the whole thing.',
+      'Full-stack developer — web and mobile, freelance and by contract.',
+      'React and TypeScript on the front, NestJS, PostgreSQL and Prisma behind it.',
+    ],
+    web: [
+      'React + TypeScript — web apps, admin panels and reporting views.',
+      'NestJS or Express APIs with typed contracts and validated input,',
+      'PostgreSQL and Prisma underneath, Sanity when content is involved.',
     ],
     mobile: [
       'React Native + Expo — iOS, Android, Android TV.',
       'Custom native modules, EAS builds, OTA updates, store submissions,',
       'offline persistence, and spatial focus navigation for TV remotes.',
     ],
-    stackHint: 'mobile/  frontend/  backend/  data/  tooling/',
+    stackHint: 'frontend/  backend/  data/  mobile/  tooling/',
     projectsNote: 'Details are in the work section — most of it is under NDA.',
     rates: [
       'fixed scope  — defined deliverable, firm price',
@@ -361,16 +367,16 @@ export const en: Dict = {
     sudoPrompt: '[sudo] password for guest: ********',
     sudoGranted: 'access granted.',
     sudoWhere: `Scroll to the contact form, or email ${profile.email}.`,
-    ls: 'mobile/  frontend/  backend/  data/  tooling/',
-    exit: "there's nowhere to go, this is the whole page",
+    ls: 'frontend/  backend/  data/  mobile/  tooling/',
+    exit: 'nothing to exit — this is a single page',
     notFound: 'zsh: command not found:',
     tryHelp: 'try `help`',
-    hints: ['help', 'whoami', 'stack', 'mobile', 'projects', 'sudo hire'],
+    hints: ['help', 'whoami', 'stack', 'web', 'mobile', 'projects', 'sudo hire'],
   },
 
   availability: {
     eyebrow: '06 — availability',
-    heading: 'How working together looks',
+    heading: 'How engagements work',
     items: [
       {
         kind: 'project',
@@ -387,15 +393,15 @@ export const en: Dict = {
         kind: 'retainer',
         status: 'limited',
         price: 'Monthly',
-        body: 'A reserved block of hours each month for ongoing work — features, maintenance, releases, whatever is on top.',
-        points: ['Priority response', 'Store releases handled', 'Roll unused hours once'],
+        body: 'A reserved block of hours each month for ongoing work — features, maintenance and releases.',
+        points: ['Priority response', 'Releases handled', 'Roll unused hours once'],
         featured: true,
       },
       {
         kind: 'consulting',
         status: 'open',
         price: 'Hourly',
-        body: 'Architecture reviews, unblocking a stuck mobile build, or a second opinion before you commit to a direction.',
+        body: 'Architecture reviews, unblocking a stalled build or release, or a second opinion before you commit to a direction.',
         points: ['Async or call', 'Written recommendations', 'No minimum engagement'],
       },
     ],
@@ -404,7 +410,7 @@ export const en: Dict = {
   contact: {
     eyebrow: '07 — contact',
     headline: ['Tell me what', "you're building."],
-    body: "A paragraph is enough. I'll come back with a scope, a timeline and an honest read on whether I'm the right person for it.",
+    body: "A paragraph is enough. I'll reply with a scope, a timeline and an honest assessment of whether I'm the right fit.",
     labels: {
       email: 'Email',
       whatsapp: 'WhatsApp',
@@ -422,7 +428,7 @@ export const en: Dict = {
       email: 'email',
       emailPlaceholder: 'you@company.com',
       needs: 'what do you need',
-      needOptions: ['Mobile app', 'TV app', 'API / backend', 'Web app', 'Not sure yet'],
+      needOptions: ['Web app', 'API / backend', 'Mobile app', 'TV app', 'Not sure yet'],
       project: 'the project',
       projectPlaceholder: "What it is, who it's for, and when you'd want it live.",
       submit: 'send it →',
@@ -442,6 +448,6 @@ export const en: Dict = {
   },
 
   footer: {
-    built: `© ${profile.year} ${profile.name} — built by hand, no template`,
+    built: `© ${profile.year} ${profile.name} — designed and built from scratch`,
   },
 }

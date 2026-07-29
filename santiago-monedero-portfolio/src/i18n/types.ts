@@ -66,6 +66,7 @@ export interface TerminalCopy {
   helpIntro: string
   help: HelpRow[]
   whoami: string[]
+  web: string[]
   mobile: string[]
   stackHint: string
   projectsNote: string
