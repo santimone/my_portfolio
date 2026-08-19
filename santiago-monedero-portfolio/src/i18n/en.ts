@@ -372,6 +372,16 @@ export const en: Dict = {
     notFound: 'zsh: command not found:',
     tryHelp: 'try `help`',
     hints: ['help', 'whoami', 'stack', 'web', 'mobile', 'projects', 'sudo hire'],
+    doom: {
+      boot: [
+        'if it runs on a toaster, it runs here.',
+        'mounting DOOM1.WAD (shareware, 1993) ... ok',
+      ],
+      title: 'DOOM (1993) — shareware episode',
+      controls: 'WASD moves · mouse or ←/→ turns · Ctrl fires · Space opens doors · Esc = game menu',
+      close: 'close',
+      failed: 'DOOM could not start — the game files did not load. Reload the page and try again.',
+    },
   },
 
   availability: {

@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
 import type { Dict, Lang } from '../i18n/types'
 import { c, mono } from '../theme'
 import { TerminalChrome } from './TerminalChrome'
+
+// the whole js-dos easter egg stays out of the main bundle until someone asks
+const DoomOverlay = lazy(() => import('./DoomOverlay'))
 
 type Tone = 'prompt' | 'normal' | 'dim' | 'accent' | 'error'
 
@@ -41,6 +44,7 @@ export function Terminal() {
   const { t, lang, setLang } = useI18n()
   const [lines, setLines] = useState<Line[]>(() => greeting(t))
   const [value, setValue] = useState('')
+  const [doomOpen, setDoomOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -136,6 +140,12 @@ export function Terminal() {
 
         case key === 'exit':
           out.push(dim(term.exit), blank())
+          break
+
+        // undocumented on purpose — the toaster meme is the manual
+        case key === 'doom' || key === 'iddqd':
+          out.push(...term.doom.boot.map((l) => dim(l)), blank())
+          setDoomOpen(true)
           break
 
         default:
@@ -255,6 +265,12 @@ export function Terminal() {
           </button>
         ))}
       </div>
+
+      {doomOpen && (
+        <Suspense fallback={null}>
+          <DoomOverlay onClose={() => setDoomOpen(false)} />
+        </Suspense>
+      )}
     </div>
   )
 }

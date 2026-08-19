@@ -80,6 +80,13 @@ export interface TerminalCopy {
   notFound: string
   tryHelp: string
   hints: string[]
+  doom: {
+    boot: string[]
+    title: string
+    controls: string
+    close: string
+    failed: string
+  }
 }
 
 export interface Dict {
