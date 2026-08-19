@@ -13,6 +13,14 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
+  "overrides": {
+    "js-dos": {
+      "react": "$react",
+      "react-dom": "$react-dom",
+      "@types/react": "$@types/react",
+      "@types/react-dom": "$@types/react-dom"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.2",
