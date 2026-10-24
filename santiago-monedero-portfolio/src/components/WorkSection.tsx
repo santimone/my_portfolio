@@ -1,8 +1,9 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useI18n } from '../i18n/useI18n'
-import { c, eyebrow, h2, mono, shell, sectionPad } from '../theme'
+import { c, display, eyebrow, h2, mix, mono, shell, sectionPad } from '../theme'
 import { Tag } from './Tag'
+import { OwnProjects } from './work/OwnProjects'
 
 export function WorkSection() {
   const { t } = useI18n()
@@ -42,7 +43,7 @@ export function WorkSection() {
   const colBody: React.CSSProperties = {
     fontSize: 14,
     lineHeight: 1.6,
-    color: 'oklch(0.74 0.01 250)',
+    color: c.textSoft,
     margin: 0,
     textWrap: 'pretty',
   }
@@ -50,22 +51,35 @@ export function WorkSection() {
   return (
     <section
       id="work"
-      style={{ padding: sectionPad, borderTop: `1px solid ${c.lineSoft}`, background: c.bgAlt }}
+      style={{ padding: sectionPad, background: c.bgAlt }}
     >
       <div style={shell}>
         <div style={eyebrow}>{t.work.eyebrow}</div>
-        <h2 style={{ ...h2, margin: '0 0 12px', maxWidth: '22ch' }}>{t.work.heading}</h2>
+        <h2 style={{ ...h2, margin: '0 0 14px', maxWidth: '22ch' }}>{t.work.heading}</h2>
         <p
           style={{
             fontSize: 15,
-            color: c.textDim,
-            margin: '0 0 40px',
+            color: c.textSoft,
+            margin: '0 0 48px',
             maxWidth: '60ch',
             lineHeight: 1.6,
           }}
         >
           {t.work.intro}
         </p>
+
+        <OwnProjects />
+
+        <h3
+          style={{
+            margin: '64px 0 20px',
+            fontFamily: display,
+            fontWeight: 700,
+            fontSize: 'clamp(22px, 2.6vw, 28px)',
+          }}
+        >
+          {t.work.clientsHeading}
+        </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {t.work.cases.map((k, i) => {
@@ -76,8 +90,11 @@ export function WorkSection() {
               <div
                 key={k.num}
                 style={{
-                  border: `1px solid ${isOpen ? 'oklch(0.82 0.15 152 / 0.55)' : c.line}`,
-                  borderRadius: 9,
+                  // longhands, because they change as cases open and close
+                  borderStyle: 'solid',
+                  borderWidth: '5px 1px 1px',
+                  borderColor: `${isOpen ? c.acc : c.wood} ${isOpen ? mix(c.acc, 55) : c.line}`,
+                  borderRadius: 4,
                   background: c.bgPanel,
                   overflow: 'hidden',
                   transition: 'border-color 220ms ease',
@@ -104,7 +121,7 @@ export function WorkSection() {
                     style={{
                       fontFamily: mono,
                       fontSize: 11,
-                      color: 'oklch(0.48 0.01 250)',
+                      color: isOpen ? c.acc : c.textFaint,
                       minWidth: 26,
                     }}
                   >
@@ -113,10 +130,11 @@ export function WorkSection() {
                   <span style={{ flex: 1, minWidth: 0 }}>
                     <h3
                       style={{
-                        fontSize: 'clamp(17px, 1.9vw, 22px)',
-                        fontWeight: 600,
+                        fontFamily: display,
+                        fontSize: 'clamp(18px, 2vw, 23px)',
+                        fontWeight: 700,
                         margin: '0 0 6px',
-                        letterSpacing: '-0.02em',
+                        lineHeight: 1.3,
                       }}
                     >
                       {k.title}
@@ -126,7 +144,7 @@ export function WorkSection() {
                         display: 'block',
                         fontFamily: mono,
                         fontSize: 11.5,
-                        color: 'oklch(0.6 0.01 250)',
+                        color: c.textDim,
                       }}
                     >
                       {k.meta}

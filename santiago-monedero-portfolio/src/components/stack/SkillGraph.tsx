@@ -12,10 +12,98 @@ interface Node {
   r: number
 }
 
+interface Palette {
+  paper: string
+  glow: string
+  glowSoft: string
+  slat: string
+  ink: string
+  inkSoft: string
+}
+
+/** The panel's colours live in CSS variables; a canvas needs them resolved. */
+function readPalette(el: Element): Palette {
+  const s = getComputedStyle(el)
+  const v = (name: string) => s.getPropertyValue(name).trim()
+  return {
+    paper: v('--paper'),
+    glow: v('--glow'),
+    glowSoft: v('--glow-soft'),
+    slat: v('--slat'),
+    ink: v('--paper-ink'),
+    inkSoft: v('--paper-ink-soft'),
+  }
+}
+
+/** Joint spacing of the asanoha lattice drawn behind the nodes. */
+const SPAN = 112
+
 /**
- * Force-directed skill graph on a canvas. Nodes repel each other, drift back
- * toward the centre, cluster loosely by group, dodge the cursor, and can be
- * dragged. Everything is drawn by hand — no graph library.
+ * `#rrggbb` at a given opacity. A canvas gradient that fades to the keyword
+ * `transparent` fades through black, which smudges the paper.
+ */
+function withAlpha(hex: string, a: number): string {
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex)
+  if (!m) return hex
+  return `rgb(${parseInt(m[1], 16)} ${parseInt(m[2], 16)} ${parseInt(m[3], 16)} / ${a})`
+}
+
+/**
+ * Draws the asanoha kumiko once into an offscreen canvas: a triangle grid with
+ * every triangle split into three from its centroid. Redrawn only on resize
+ * or theme change; each frame just stamps it over the glow.
+ */
+function drawLattice(w: number, h: number, dpr: number, color: string): HTMLCanvasElement {
+  const off = document.createElement('canvas')
+  off.width = Math.max(1, Math.round(w * dpr))
+  off.height = Math.max(1, Math.round(h * dpr))
+  const ctx = off.getContext('2d')
+  if (!ctx) return off
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+  const row = (SPAN * Math.sqrt(3)) / 2
+  ctx.strokeStyle = color
+  ctx.globalAlpha = 0.28
+  ctx.lineWidth = 1.2
+  ctx.beginPath()
+
+  for (let r = -1; r * row < h + row; r++) {
+    const y0 = r * row
+    const y1 = y0 + row
+    const shift = r % 2 === 0 ? 0 : SPAN / 2
+    for (let x = -SPAN + shift; x < w + SPAN; x += SPAN) {
+      // the upward triangle (x, y1) – (x + SPAN/2, y0) – (x + SPAN, y1)
+      // and the downward one (x + SPAN/2, y0) – (x + SPAN, y1) – (x + 1.5·SPAN, y0)
+      const tris = [
+        [x, y1, x + SPAN / 2, y0, x + SPAN, y1],
+        [x + SPAN / 2, y0, x + SPAN, y1, x + SPAN * 1.5, y0],
+      ]
+      for (const [ax, ay, bx, by, cx, cy] of tris) {
+        ctx.moveTo(ax, ay)
+        ctx.lineTo(bx, by)
+        ctx.lineTo(cx, cy)
+        ctx.lineTo(ax, ay)
+        const mx = (ax + bx + cx) / 3
+        const my = (ay + by + cy) / 3
+        ctx.moveTo(mx, my)
+        ctx.lineTo(ax, ay)
+        ctx.moveTo(mx, my)
+        ctx.lineTo(bx, by)
+        ctx.moveTo(mx, my)
+        ctx.lineTo(cx, cy)
+      }
+    }
+  }
+  ctx.stroke()
+  return off
+}
+
+/**
+ * Force-directed skill graph on a canvas, drawn as a backlit shoji panel.
+ * Nodes repel each other, drift back toward the centre, cluster loosely by
+ * group, dodge the cursor, and can be dragged. The lamp behind the paper
+ * follows the pointer, and hovering a node lights its whole group.
+ * Everything is drawn by hand — no graph library.
  *
  * With "reduce motion" on, the simulation is run to a settled layout once and
  * drawn as a still frame; dragging and hovering still redraw, because those
@@ -35,6 +123,8 @@ export function SkillGraph() {
     let w = 0
     let h = 0
     let placed = false
+    let palette = readPalette(cv)
+    let lattice: HTMLCanvasElement | null = null
 
     const nodes: Node[] = GRAPH_NODES.map((s) => ({
       n: s.n,
@@ -48,6 +138,8 @@ export function SkillGraph() {
 
     let drag: Node | null = null
     const mouse = { x: -9999, y: -9999 }
+    /** where the lamp is; it eases toward its target rather than jumping */
+    const lamp = { x: 0, y: 0 }
 
     const layout = () => {
       nodes.forEach((n, i) => {
@@ -55,8 +147,10 @@ export function SkillGraph() {
         const rad = Math.min(w, h) * (0.18 + 0.22 * ((i % 3) / 2))
         n.x = w / 2 + Math.cos(a) * rad
         n.y = h / 2 + Math.sin(a) * rad
-        n.r = 6 + (5 - n.g) * 0.9
+        n.r = 6 + (5 - n.g) * 0.6
       })
+      lamp.x = w / 2
+      lamp.y = h / 2
     }
 
     const simulate = () => {
@@ -121,21 +215,60 @@ export function SkillGraph() {
       }
     }
 
-    const render = () => {
+    /** The node under the pointer (or being dragged), if any. */
+    const hotNode = (): Node | null => {
+      if (drag) return drag
+      let best: Node | null = null
+      let bd = 46
+      for (const n of nodes) {
+        const d = Math.hypot(n.x - mouse.x, n.y - mouse.y)
+        if (d < bd) {
+          bd = d
+          best = n
+        }
+      }
+      return best
+    }
+
+    const render = (ease = 0.12) => {
+      const hot = hotNode()
+      const lit = hot ? hot.g : -1
+
+      // the lamp follows the hot node, else the pointer, else rests in the middle
+      const inside = mouse.x > -999
+      const tx = hot ? hot.x : inside ? mouse.x : w / 2
+      const ty = hot ? hot.y : inside ? mouse.y : h / 2
+      lamp.x += (tx - lamp.x) * ease
+      lamp.y += (ty - lamp.y) * ease
+
       ctx.clearRect(0, 0, w, h)
+      ctx.fillStyle = palette.paper
+      ctx.fillRect(0, 0, w, h)
+
+      const rad = Math.max(w, h) * 0.55
+      const glow = ctx.createRadialGradient(lamp.x, lamp.y, 0, lamp.x, lamp.y, rad)
+      glow.addColorStop(0, palette.glow)
+      glow.addColorStop(0.55, withAlpha(palette.glowSoft, 0.6))
+      glow.addColorStop(1, withAlpha(palette.glowSoft, 0))
+      ctx.fillStyle = glow
+      ctx.globalAlpha = 0.85
+      ctx.fillRect(0, 0, w, h)
+      ctx.globalAlpha = 1
+
+      if (lattice) ctx.drawImage(lattice, 0, 0, w, h)
 
       for (let a = 0; a < nodes.length; a++) {
         for (let b = a + 1; b < nodes.length; b++) {
           const n = nodes[a]
           const o = nodes[b]
+          if (n.g !== o.g) continue
           const d = Math.hypot(n.x - o.x, n.y - o.y)
-          if (d < 175) {
-            const fade = 1 - d / 175
-            ctx.strokeStyle =
-              n.g === o.g
-                ? `oklch(0.6 0.08 152 / ${0.32 * fade})`
-                : `oklch(0.55 0.01 250 / ${0.2 * fade})`
-            ctx.lineWidth = 1
+          if (d < 190) {
+            const on = n.g === lit
+            ctx.strokeStyle = GRAPH_COLORS[n.g]
+            ctx.globalAlpha = on ? 0.95 : 0.4 * (1 - d / 190)
+            ctx.lineWidth = on ? 3.5 : 1.5
+            ctx.lineCap = 'round'
             ctx.beginPath()
             ctx.moveTo(n.x, n.y)
             ctx.lineTo(o.x, o.y)
@@ -143,27 +276,53 @@ export function SkillGraph() {
           }
         }
       }
+      ctx.globalAlpha = 1
 
       for (const n of nodes) {
-        const hot = Math.hypot(n.x - mouse.x, n.y - mouse.y) < 46 || n === drag
+        const on = n.g === lit
+        const dim = lit !== -1 && !on
+        const color = GRAPH_COLORS[n.g]
+        ctx.globalAlpha = dim ? 0.4 : 1
+
+        if (n === hot) {
+          ctx.beginPath()
+          ctx.arc(n.x, n.y, n.r + 10, 0, Math.PI * 2)
+          ctx.fillStyle = color
+          ctx.globalAlpha = 0.22
+          ctx.fill()
+          ctx.globalAlpha = 1
+        }
+
         ctx.beginPath()
-        ctx.arc(n.x, n.y, n.r + (hot ? 3 : 0), 0, Math.PI * 2)
-        ctx.fillStyle = GRAPH_COLORS[n.g]
-        ctx.globalAlpha = hot ? 1 : 0.85
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+        ctx.fillStyle = on ? color : palette.paper
         ctx.fill()
-        ctx.globalAlpha = 1
-        ctx.font = `${hot ? '600 12px' : '400 11.5px'} 'JetBrains Mono', monospace`
-        ctx.fillStyle = hot ? 'oklch(0.97 0.01 250)' : 'oklch(0.72 0.01 250)'
+        ctx.lineWidth = 2.2
+        ctx.strokeStyle = color
+        ctx.stroke()
+
+        // a scrap of paper behind each label keeps it legible over the slats
+        ctx.font = `${on ? '700 12.5px' : '500 12px'} 'JetBrains Mono', monospace`
+        const lw = ctx.measureText(n.n).width + 10
+        const ly = n.y + n.r + 5
+        ctx.fillStyle = palette.paper
+        ctx.globalAlpha = dim ? 0.35 : 0.88
+        ctx.beginPath()
+        ctx.roundRect(n.x - lw / 2, ly, lw, 18, 3)
+        ctx.fill()
+        ctx.globalAlpha = dim ? 0.4 : 1
+        ctx.fillStyle = on ? palette.ink : palette.inkSoft
         ctx.textAlign = 'center'
         ctx.textBaseline = 'top'
-        ctx.fillText(n.n, n.x, n.y + n.r + 6)
+        ctx.fillText(n.n, n.x, ly + 3)
+        ctx.globalAlpha = 1
       }
     }
 
     /** Fast-forward to a settled arrangement without showing the motion. */
     const settle = () => {
       for (let i = 0; i < 600; i++) simulate()
-      render()
+      render(1)
     }
 
     const resize = () => {
@@ -173,17 +332,26 @@ export function SkillGraph() {
       cv.width = Math.max(1, Math.round(w * dpr))
       cv.height = Math.max(1, Math.round(h * dpr))
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      lattice = w > 0 ? drawLattice(w, h, dpr, palette.slat) : null
       if (!placed && w > 0) {
         layout()
         placed = true
         if (still) settle()
       } else if (still) {
-        render()
+        render(1)
       }
     }
 
     resize()
     window.addEventListener('resize', resize)
+
+    // day ⇄ night swaps the CSS variables; re-read them and redraw the lattice
+    const themeWatch = new MutationObserver(() => {
+      palette = readPalette(cv)
+      if (w > 0) lattice = drawLattice(w, h, dpr, palette.slat)
+      if (still) render(1)
+    })
+    themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     const pointFrom = (e: MouseEvent | TouchEvent) => {
       const r = cv.getBoundingClientRect()
@@ -209,7 +377,7 @@ export function SkillGraph() {
         cv.style.cursor = 'grabbing'
         e.preventDefault()
       }
-      if (still) render()
+      if (still) render(1)
     }
 
     const onMove = (e: MouseEvent | TouchEvent) => {
@@ -224,19 +392,19 @@ export function SkillGraph() {
         e.preventDefault()
       }
       // no rAF loop is running in reduced-motion mode, so redraw on demand
-      if (still) render()
+      if (still) render(1)
     }
 
     const onUp = () => {
       drag = null
       cv.style.cursor = 'grab'
-      if (still) render()
+      if (still) render(1)
     }
 
     const onLeave = () => {
       mouse.x = -9999
       mouse.y = -9999
-      if (still) render()
+      if (still) render(1)
     }
 
     cv.addEventListener('mousedown', onDown)
@@ -260,6 +428,7 @@ export function SkillGraph() {
 
     return () => {
       if (raf) cancelAnimationFrame(raf)
+      themeWatch.disconnect()
       window.removeEventListener('resize', resize)
       cv.removeEventListener('mousedown', onDown)
       cv.removeEventListener('touchstart', onDown)

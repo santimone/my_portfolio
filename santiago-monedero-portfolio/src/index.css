@@ -1,4 +1,116 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ---------------------------------------------------------------------------
+   Kumiko palette. Night is the default — burnt wood with a lit shoji panel;
+   day is washi paper with pale hinoki. theme.ts only ever references these
+   variables, so switching data-theme on <html> repaints the whole page.
+   --------------------------------------------------------------------------- */
+
+:root,
+:root[data-theme='night'] {
+  color-scheme: dark;
+
+  --bg: #151210;
+  --bg-alt: #110e0c;
+  --panel: #1e1a16;
+  --panel-soft: #221d18;
+  --raised: #26201b;
+  --input: #110e0c;
+  --header-bg: rgb(21 18 16 / 0.86);
+
+  --line: #2f2822;
+  --line-soft: #241e19;
+  --line-strong: #3a3129;
+
+  --text: #f2e9dc;
+  --text-soft: #cfc3b4;
+  --text-muted: #b5a797;
+  --text-dim: #9a8c7c;
+  --text-faint: #8e8172;
+  --text-ghost: #5c5248;
+
+  --acc: #e6c998;
+  --acc-hover: #f2ddb6;
+  --acc-ink: #1e1710;
+
+  --wood: #6e4e33;
+  --wood-dark: #4a3424;
+  --wood-grain: #5c4230;
+  --rail: #3e2b1d;
+
+  /* the shoji panels: paper lit from behind, slats in silhouette */
+  --paper: #c9a56e;
+  --glow: #fff1d2;
+  --glow-soft: #f0d29a;
+  --slat: #2a1e14;
+  --slat-hi: transparent;
+  --paper-ink: #1e1710;
+  --paper-ink-soft: #3a2a1c;
+  --halo: rgb(230 201 152 / 0.16);
+
+  --seal: #c24a30;
+  --seal-ink: #fff6ec;
+  --ok: #a8c686;
+  --warn: #e6b358;
+  --danger: #e8907a;
+}
+
+:root[data-theme='day'] {
+  color-scheme: light;
+
+  --bg: #f3ede2;
+  --bg-alt: #ede5d7;
+  --panel: #fbf7f0;
+  --panel-soft: #f7f1e6;
+  --raised: #f3eadb;
+  --input: #fbf7f0;
+  --header-bg: rgb(243 237 226 / 0.88);
+
+  --line: #ddd2c0;
+  --line-soft: #e6dccb;
+  --line-strong: #cbbba3;
+
+  --text: #2a2018;
+  --text-soft: #4a3b2e;
+  --text-muted: #5a4a3c;
+  --text-dim: #6b5a4a;
+  --text-faint: #735f4f;
+  --text-ghost: #b3a38d;
+
+  --acc: #8a5a34;
+  --acc-hover: #6e4526;
+  --acc-ink: #f7efe1;
+
+  --wood: #a47b55;
+  --wood-dark: #8a6440;
+  --wood-grain: #a07650;
+  --rail: #7a5636;
+
+  --paper: #f1e5cf;
+  --glow: #fffdf7;
+  --glow-soft: #fff6e4;
+  --slat: #8a6440;
+  --slat-hi: #c9a27a;
+  --paper-ink: #2a2018;
+  --paper-ink-soft: #5a4a3c;
+  --halo: transparent;
+
+  --seal: #b23e26;
+  --seal-ink: #fff6ec;
+  --ok: #4e6a2e;
+  --warn: #9a5a16;
+  --danger: #b3392a;
+}
+
+/* code blocks and the terminal stay ink-dark in both themes */
+:root {
+  --code-bg: #0d0b09;
+  --code-line: #2b241e;
+  --code-text: #cfc3b4;
+  --code-dim: #9a8c7c;
+  --code-acc: #e6c998;
+  --code-error: #e8907a;
+}
 
 html {
   scroll-behavior: smooth;
@@ -7,10 +119,13 @@ html {
 
 body {
   margin: 0;
-  background: oklch(0.15 0.006 250);
-  color: oklch(0.93 0.008 250);
-  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  transition:
+    background 300ms ease,
+    color 300ms ease;
 }
 
 * {
@@ -18,12 +133,12 @@ body {
 }
 
 a {
-  color: oklch(0.82 0.15 152);
+  color: var(--acc);
   text-decoration: none;
 }
 
 a:hover {
-  color: oklch(0.9 0.16 152);
+  color: var(--acc-hover);
 }
 
 input,
@@ -34,12 +149,12 @@ button {
 }
 
 ::selection {
-  background: oklch(0.82 0.15 152);
-  color: oklch(0.15 0.006 250);
+  background: var(--acc);
+  color: var(--acc-ink);
 }
 
 :focus-visible {
-  outline: 2px solid oklch(0.82 0.15 152);
+  outline: 2px solid var(--acc);
   outline-offset: 2px;
 }
 
@@ -54,25 +169,6 @@ button {
   }
 }
 
-@keyframes pulseDot {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 oklch(0.82 0.15 152 / 0.55);
-  }
-  70% {
-    box-shadow: 0 0 0 10px oklch(0.82 0.15 152 / 0);
-  }
-}
-
-@keyframes marq {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 /* ---------------------------------------------------------------------------
    Hover / focus states.
    The design canvas expressed these as `style-hover` attributes; in React they
@@ -80,11 +176,11 @@ button {
    --------------------------------------------------------------------------- */
 
 .nav-link {
-  color: oklch(0.66 0.01 250);
+  color: var(--text-dim);
   transition: color 160ms ease;
 }
 .nav-link:hover {
-  color: oklch(0.93 0.008 250);
+  color: var(--text);
 }
 
 .btn-primary {
@@ -93,7 +189,8 @@ button {
     transform 180ms ease;
 }
 .btn-primary:hover {
-  background: oklch(0.88 0.16 152);
+  background: var(--acc-hover);
+  color: var(--acc-ink);
   transform: translateY(-1px);
 }
 
@@ -103,44 +200,54 @@ button {
     background 180ms ease;
 }
 .btn-secondary:hover {
-  border-color: oklch(0.5 0.01 250);
-  background: oklch(0.19 0.007 250);
+  border-color: var(--text-faint);
+  background: var(--raised);
+  color: var(--text);
 }
 
 .btn-outline {
   transition: border-color 180ms ease;
 }
 .btn-outline:hover {
-  border-color: oklch(0.5 0.01 250);
+  border-color: var(--text-faint);
 }
 
 .btn-hire {
   transition: background 180ms ease;
 }
 .btn-hire:hover {
-  background: oklch(0.82 0.15 152 / 0.18);
+  background: var(--acc-hover);
+  color: var(--acc-ink);
 }
 
+/* hover recolours the side and bottom edges only, so the wooden top rail stays wood */
 .card-hover {
   transition: border-color 220ms ease;
 }
 .card-hover:hover {
-  border-color: oklch(0.38 0.03 152);
+  border-left-color: var(--wood);
+  border-right-color: var(--wood);
+  border-bottom-color: var(--wood);
 }
 
 .tree-item {
-  color: oklch(0.78 0.01 250);
+  color: var(--text-soft);
   transition: color 140ms ease;
 }
 .tree-item:hover {
-  color: oklch(0.96 0.01 250);
+  color: var(--text);
 }
 
 .service-cell {
-  transition: background 200ms ease;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease;
 }
 .service-cell:hover {
-  background: oklch(0.19 0.008 250);
+  background: var(--panel-soft);
+  border-left-color: var(--line-strong);
+  border-right-color: var(--line-strong);
+  border-bottom-color: var(--line-strong);
 }
 
 .hint-pill {
@@ -149,19 +256,19 @@ button {
     color 160ms ease;
 }
 .hint-pill:hover {
-  border-color: oklch(0.82 0.15 152 / 0.5);
-  color: oklch(0.82 0.15 152);
+  border-color: var(--code-acc);
+  color: var(--code-acc);
 }
 
 .field {
   transition: border-color 160ms ease;
 }
 .field:focus {
-  border-color: oklch(0.82 0.15 152);
+  border-color: var(--acc);
 }
 
 .field::placeholder {
-  color: oklch(0.45 0.01 250);
+  color: var(--text-faint);
 }
 
 /* contact list: accent logo, readable label, whole row lights up on hover */
@@ -169,14 +276,14 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: oklch(0.86 0.01 250);
+  color: var(--text-soft);
   transition: color 160ms ease;
 }
 .contact-row:hover {
-  color: oklch(0.88 0.16 152);
+  color: var(--acc);
 }
 .contact-row svg {
-  color: oklch(0.82 0.15 152);
+  color: var(--acc);
 }
 
 /* off-screen honeypot — bots fill it, people never see it */
@@ -188,16 +295,34 @@ button {
   overflow: hidden;
 }
 
-/* on tiny screens the header sheds the "/dev" suffix, then the EN/ES codes —
-   the flags alone still identify the language, and the buttons keep aria-labels */
+/* the case-study dialogs: a native <dialog>, so focus and Esc come for free */
+.case-dialog {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: min(980px, calc(100vw - 24px));
+  width: 100%;
+  max-height: calc(100dvh - 24px);
+  overflow: visible;
+}
+.case-dialog::backdrop {
+  background: rgb(8 6 5 / 0.72);
+  backdrop-filter: blur(3px);
+}
+
+/* on tiny screens the header sheds the name next to the seal, then the EN/ES
+   codes — the seal and flags still identify both, and the buttons keep aria-labels */
 @media (max-width: 480px) {
   .lang-code {
+    display: none;
+  }
+  .theme-label {
     display: none;
   }
 }
 
 @media (max-width: 420px) {
-  .logo-suffix {
+  .logo-name {
     display: none;
   }
 }

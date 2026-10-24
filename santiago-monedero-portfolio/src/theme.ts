@@ -1,62 +1,87 @@
 /**
- * Design tokens lifted from the Portfolio design canvas.
- * Every colour is oklch so the accent can be re-hued by changing one number (152).
+ * Design tokens for the kumiko redesign.
+ * Every colour is a CSS variable defined per theme in index.css, so these
+ * strings stay the same in both themes and the inline styles never re-render
+ * on a theme switch — the browser repaints them.
  */
-
-export const ACC = 'oklch(0.82 0.15 152)'
-export const ACC_HOVER = 'oklch(0.88 0.16 152)'
 
 export const c = {
   /** page background */
-  bg: 'oklch(0.15 0.006 250)',
+  bg: 'var(--bg)',
   /** slightly darker band used to alternate sections */
-  bgAlt: 'oklch(0.132 0.006 250)',
-  bgPanel: 'oklch(0.163 0.006 250)',
-  bgPanelSoft: 'oklch(0.175 0.007 250)',
-  bgRaised: 'oklch(0.18 0.007 250)',
-  bgTerminal: 'oklch(0.105 0.006 250)',
-  bgCode: 'oklch(0.115 0.006 250)',
-  bgInput: 'oklch(0.13 0.006 250)',
+  bgAlt: 'var(--bg-alt)',
+  bgPanel: 'var(--panel)',
+  bgPanelSoft: 'var(--panel-soft)',
+  bgRaised: 'var(--raised)',
+  bgInput: 'var(--input)',
+  headerBg: 'var(--header-bg)',
 
-  line: 'oklch(0.26 0.008 250)',
-  lineSoft: 'oklch(0.22 0.008 250)',
-  lineDim: 'oklch(0.24 0.008 250)',
-  lineStrong: 'oklch(0.28 0.008 250)',
-  lineBright: 'oklch(0.3 0.008 250)',
+  line: 'var(--line)',
+  lineSoft: 'var(--line-soft)',
+  lineStrong: 'var(--line-strong)',
 
-  text: 'oklch(0.93 0.008 250)',
-  textSoft: 'oklch(0.78 0.01 250)',
-  textMuted: 'oklch(0.72 0.01 250)',
-  textDim: 'oklch(0.62 0.01 250)',
-  textFaint: 'oklch(0.5 0.01 250)',
-  textGhost: 'oklch(0.4 0.01 250)',
-  meta: 'oklch(0.58 0.01 250)',
-  label: 'oklch(0.56 0.01 250)',
+  text: 'var(--text)',
+  textSoft: 'var(--text-soft)',
+  textMuted: 'var(--text-muted)',
+  textDim: 'var(--text-dim)',
+  textFaint: 'var(--text-faint)',
+  textGhost: 'var(--text-ghost)',
 
-  acc: ACC,
-  accHover: ACC_HOVER,
-  accInk: 'oklch(0.15 0.006 250)',
-  danger: 'oklch(0.68 0.16 25)',
+  acc: 'var(--acc)',
+  accHover: 'var(--acc-hover)',
+  accInk: 'var(--acc-ink)',
+
+  wood: 'var(--wood)',
+  woodDark: 'var(--wood-dark)',
+  woodGrain: 'var(--wood-grain)',
+  rail: 'var(--rail)',
+
+  paper: 'var(--paper)',
+  glow: 'var(--glow)',
+  glowSoft: 'var(--glow-soft)',
+  slat: 'var(--slat)',
+  slatHi: 'var(--slat-hi)',
+  paperInk: 'var(--paper-ink)',
+  paperInkSoft: 'var(--paper-ink-soft)',
+  halo: 'var(--halo)',
+
+  seal: 'var(--seal)',
+  sealInk: 'var(--seal-ink)',
+  ok: 'var(--ok)',
+  warn: 'var(--warn)',
+  danger: 'var(--danger)',
+
+  codeBg: 'var(--code-bg)',
+  codeLine: 'var(--code-line)',
+  codeText: 'var(--code-text)',
+  codeDim: 'var(--code-dim)',
+  codeAcc: 'var(--code-acc)',
+  codeError: 'var(--code-error)',
 } as const
 
+/** `color` at `pct`% opacity — works on the CSS variables above. */
+export const mix = (color: string, pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
+
 export const mono = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
-export const sans = "'IBM Plex Sans', system-ui, -apple-system, sans-serif"
+export const sans = "'Zen Kaku Gothic New', system-ui, -apple-system, sans-serif"
+export const display = "'Shippori Mincho', Georgia, serif"
 
 /** eyebrow label above every section heading */
 export const eyebrow: React.CSSProperties = {
   fontFamily: mono,
-  fontSize: 11,
+  fontSize: 11.5,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
-  color: ACC,
+  color: c.acc,
   marginBottom: 14,
 }
 
 export const h2: React.CSSProperties = {
-  fontSize: 'clamp(28px, 4.2vw, 52px)',
-  lineHeight: 1.02,
-  letterSpacing: '-0.03em',
-  fontWeight: 600,
+  fontFamily: display,
+  fontSize: 'clamp(30px, 4.2vw, 52px)',
+  lineHeight: 1.1,
+  letterSpacing: '-0.01em',
+  fontWeight: 700,
   margin: 0,
   textWrap: 'balance',
 }
@@ -68,8 +93,16 @@ export const shell: React.CSSProperties = {
 
 export const sectionPad = 'clamp(56px, 10vh, 120px) clamp(16px, 4vw, 56px)'
 
+/**
+ * A wooden top rail, like the frame bar of a shoji panel. Spread onto any card
+ * that already has a 1px border.
+ */
+export const railTop: React.CSSProperties = {
+  borderTop: `6px solid ${c.wood}`,
+}
+
 /** tab pill colours, driven by whether the tab is selected */
 export const tab = (on: boolean) => ({
-  background: on ? ACC : 'transparent',
+  background: on ? c.acc : 'transparent',
   color: on ? c.accInk : c.textDim,
 })

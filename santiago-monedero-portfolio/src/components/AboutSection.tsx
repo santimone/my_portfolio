@@ -1,12 +1,12 @@
 import { useI18n } from '../i18n/useI18n'
-import { c, eyebrow, mono, shell, sectionPad } from '../theme'
+import { c, display, eyebrow, mono, shell, sectionPad } from '../theme'
 import { Terminal } from './Terminal'
 
 export function AboutSection() {
   const { t, lang } = useI18n()
 
   return (
-    <section id="about" style={{ padding: sectionPad, borderTop: `1px solid ${c.lineSoft}` }}>
+    <section id="about" style={{ padding: sectionPad }}>
       <div
         style={{
           ...shell,
@@ -20,10 +20,11 @@ export function AboutSection() {
           <div style={eyebrow}>{t.about.eyebrow}</div>
           <h2
             style={{
-              fontSize: 'clamp(26px, 3.6vw, 44px)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
-              fontWeight: 600,
+              fontFamily: display,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.1,
+              letterSpacing: '-0.01em',
+              fontWeight: 700,
               margin: '0 0 22px',
               textWrap: 'balance',
             }}
@@ -37,7 +38,7 @@ export function AboutSection() {
               style={{
                 fontSize: 15.5,
                 lineHeight: 1.7,
-                color: c.textMuted,
+                color: c.textSoft,
                 margin: i === 0 ? '0 0 16px' : '0 0 28px',
                 maxWidth: '52ch',
                 textWrap: 'pretty',
@@ -55,20 +56,20 @@ export function AboutSection() {
             }}
           >
             {t.about.facts.map((f) => (
-              <div key={f.k} style={{ borderLeft: `1px solid ${c.lineBright}`, paddingLeft: 14 }}>
+              <div key={f.k} style={{ borderLeft: `3px solid ${c.wood}`, paddingLeft: 14 }}>
                 <div
                   style={{
                     fontFamily: mono,
                     fontSize: 10,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
-                    color: 'oklch(0.52 0.01 250)',
+                    color: c.textFaint,
                     marginBottom: 6,
                   }}
                 >
                   {f.k}
                 </div>
-                <div style={{ fontSize: 14.5, color: 'oklch(0.9 0.008 250)' }}>{f.v}</div>
+                <div style={{ fontSize: 14.5, color: c.text }}>{f.v}</div>
               </div>
             ))}
           </div>

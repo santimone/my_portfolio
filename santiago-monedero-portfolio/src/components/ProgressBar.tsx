@@ -12,15 +12,15 @@ export function ProgressBar() {
         top: 0,
         left: 0,
         right: 0,
-        height: 2,
-        background: c.lineDim,
+        height: 3,
+        background: c.lineSoft,
         zIndex: 60,
       }}
     >
       <div
         style={{
           height: '100%',
-          background: c.acc,
+          background: c.wood,
           width: `${progress}%`,
           transition: 'width 90ms linear',
         }}

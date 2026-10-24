@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { DEPTH_LEVELS, type DepthKey } from '../../data/profile'
 import { useInView } from '../../hooks/useInView'
 import { useI18n } from '../../i18n/useI18n'
-import { c, eyebrow, h2, mono, shell, sectionPad, tab } from '../../theme'
+import { c, eyebrow, h2, mono, railTop, shell, sectionPad, tab } from '../../theme'
 import { SkillGraph } from './SkillGraph'
 
 type View = 'tree' | 'depth' | 'graph'
@@ -72,11 +72,12 @@ export function StackSection() {
         {view === 'graph' && (
           <div
             style={{
-              border: `1px solid ${c.line}`,
-              borderRadius: 10,
-              background: 'oklch(0.135 0.006 250)',
+              border: `12px solid ${c.woodDark}`,
+              borderRadius: 4,
+              background: c.paper,
               overflow: 'hidden',
               position: 'relative',
+              boxShadow: `0 0 90px ${c.halo}`,
             }}
           >
             <SkillGraph />
@@ -87,7 +88,7 @@ export function StackSection() {
                 bottom: 14,
                 fontFamily: mono,
                 fontSize: 11,
-                color: c.textFaint,
+                color: c.paperInkSoft,
                 pointerEvents: 'none',
               }}
             >
@@ -117,8 +118,9 @@ function StackTree() {
           className="card-hover"
           style={{
             border: `1px solid ${c.line}`,
-            borderRadius: 8,
-            background: c.bgPanelSoft,
+            ...railTop,
+            borderRadius: 4,
+            background: c.bgPanel,
             overflow: 'hidden',
           }}
         >
@@ -128,12 +130,11 @@ function StackTree() {
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '14px 16px',
-              borderBottom: `1px solid ${c.lineDim}`,
-              background: 'oklch(0.155 0.006 250)',
+              borderBottom: `1px solid ${c.lineSoft}`,
             }}
           >
             <span style={{ fontFamily: mono, fontSize: 13, color: c.acc }}>{g.dir}</span>
-            <span style={{ fontFamily: mono, fontSize: 11, color: 'oklch(0.52 0.01 250)' }}>
+            <span style={{ fontFamily: mono, fontSize: 11, color: c.textFaint }}>
               {g.items.length} {t.stack.itemsSuffix}
             </span>
           </div>
@@ -173,8 +174,7 @@ function StackDepth() {
     >
       {t.stack.depth.map((d, i) => {
         const pct = pctByKey.get(d.key) ?? 0
-        const color =
-          pct >= 85 ? c.acc : pct >= 75 ? 'oklch(0.78 0.11 190)' : 'oklch(0.62 0.05 250)'
+        const color = pct >= 85 ? c.acc : pct >= 75 ? c.wood : c.textGhost
 
         return (
           <div key={d.key}>
@@ -188,7 +188,7 @@ function StackDepth() {
               }}
             >
               <span style={{ fontFamily: mono, fontSize: 14, color: c.text }}>{d.name}</span>
-              <span style={{ fontFamily: mono, fontSize: 11, color: c.label }}>{d.label}</span>
+              <span style={{ fontFamily: mono, fontSize: 11, color: c.textFaint }}>{d.label}</span>
             </div>
             <div
               role="meter"
@@ -199,7 +199,7 @@ function StackDepth() {
               style={{
                 height: 5,
                 borderRadius: 3,
-                background: c.lineDim,
+                background: c.line,
                 overflow: 'hidden',
               }}
             >

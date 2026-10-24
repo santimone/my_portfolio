@@ -22,6 +22,13 @@ export const es: Dict = {
     es: 'ES',
   },
 
+  appearance: {
+    night: 'noche',
+    day: 'día',
+    toDay: 'Cambiar a modo día',
+    toNight: 'Cambiar a modo noche',
+  },
+
   cta: {
     primary: 'empecemos un proyecto →',
     secondary: 'ver el stack',
@@ -31,6 +38,8 @@ export const es: Dict = {
     kicker: `${profile.name.toLowerCase()} — buenos aires · remoto`,
     headline: ['Web y mobile,', 'de punta a punta.'],
     body: 'Desarrollador full stack en Buenos Aires — React y TypeScript adelante, NestJS y PostgreSQL detrás, React Native cuando el producto necesita una app. Movés el cursor: cada nodo es parte del stack.',
+    panelLabel:
+      'Panel shoji de madera iluminado desde atrás. Al mover el cursor, la luz lo sigue y cada nodo de la celosía muestra una parte del stack.',
   },
 
   stack: {
@@ -256,6 +265,191 @@ export const es: Dict = {
     intro:
       'Casi todo lo que hice pertenece a empleadores y clientes, así que cada entrada describe el problema y lo que construí — sin logos ni capturas.',
     labels: { problem: 'problema', approach: 'qué hice', stack: 'stack' },
+    own: {
+      heading: 'Proyectos propios',
+      sub: 'mis apps, cada una con su temática particular',
+      viewCase: 'ver el caso →',
+      close: 'cerrar',
+      sampleData: 'datos de ejemplo',
+      projects: [
+        {
+          id: 'al-cierre',
+          kicker: 'proyecto propio · 2026 · diseño, backend y frontend',
+          title: 'Al Cierre',
+          tagline: 'Cuánto llevo gastado antes de que cierre la tarjeta.',
+          problem:
+            'Las alertas de consumo llegan por mail, el resumen llega en PDF con contraseña después del cierre y Mercado Pago está aparte. No había una vista del ciclo de facturación en curso.',
+          approach:
+            'Una web app que junta dos tarjetas de crédito y Mercado Pago, corrige rechazos, duplicados, reversas y cuotas, y muestra el gasto por ciclo y por rubro. Los parsers y las reglas de reconciliación están testeados en Node.',
+          tags: ['Google Apps Script', 'Google Sheets', 'Gmail', 'Drive', 'Mercado Pago API', 'pdf.js', 'HTML/CSS/JS', 'clasp', 'Node (tests)'],
+          note: 'la app y el repo son privados: tienen datos financieros reales',
+          detail: {
+            meta: [
+              { k: 'Tipo', v: 'Proyecto propio, de uso personal' },
+              { k: 'Rol', v: 'Diseño, backend y frontend' },
+              { k: 'Año', v: '2026' },
+              { k: 'Corre en', v: 'Google Apps Script + Sheets, sin servidor propio' },
+            ],
+            sections: [
+              {
+                heading: 'El problema',
+                body: 'Cada compra con tarjeta manda un mail de alerta en el momento. El resumen llega recién después del cierre, en un PDF con contraseña, y Mercado Pago tiene su propia app. Para saber cuánto llevaba gastado en el ciclo había que sumar a mano, y los mails no cuentan todo: hay rechazos, compras repetidas, reversas y cuotas que el mail no aclara.',
+              },
+              {
+                heading: 'De dónde sale cada número',
+                items: [
+                  { k: 'Alertas por mail', v: 'Cada 30 minutos lee Gmail y parsea las alertas de los dos procesadores de pago, cada uno con su formato.' },
+                  { k: 'Resumen del banco', v: 'El PDF viene encriptado. Se abre en el navegador con pdf.js y se cruza con las alertas: saldo, pago mínimo y el cuadro de cuotas a vencer.' },
+                  { k: 'Mercado Pago', v: 'Todos los días a las 6 pide a la API el reporte de dinero en cuenta, lo baja a Drive y lo importa. Los reintegros se descuentan solos.' },
+                ],
+              },
+              {
+                heading: 'Un solo recálculo',
+                items: [
+                  { k: 'Guardar lo leído', v: 'Cada mail o movimiento queda guardado una vez, con lo extraído. Es la fuente de verdad y evita duplicar.' },
+                  { k: 'Reconciliar', v: 'Rechazos, duplicados, reversas, devoluciones, cuotas y cobros posiblemente repetidos.' },
+                  { k: 'Asignar al ciclo', v: 'Cada movimiento cae en su ciclo según la fecha de cierre real, no la del calendario.' },
+                  { k: 'Mostrar y avisar', v: 'La web app lee el resultado y los viernes a las 9 llega un resumen por mail.' },
+                ],
+              },
+              {
+                heading: 'Lo que el mail no dice',
+                body: 'Las alertas no son el resumen. Todo lo que la app corrige queda en una lista de observaciones para revisar: un posible cobro repetido, una compra rechazada que no suma, una reversa ya descontada o una compra que se presenta después del cierre y pasa al ciclo siguiente.',
+              },
+              {
+                heading: 'Decisiones',
+                items: [
+                  { k: 'Sheets como base de datos', v: 'Cero costo, se puede abrir y corregir a mano, y la app respeta esas correcciones en cada recálculo.' },
+                  { k: 'Solo el dueño entra', v: 'La web app se publica con acceso restringido y además chequea el mail de quien la abre. El token de Mercado Pago vive en las propiedades del script.' },
+                  { k: 'Lógica pura, testeada en Node', v: 'Parsers, reconciliación y ciclos no tocan servicios de Google, así que corren en Node con tests sin dependencias.' },
+                  { k: 'Recalcular siempre desde cero', v: 'Lo leído se guarda una vez y lo que se muestra se regenera entero. Cambiar una regla y reprocesar meses de mails es un botón.' },
+                ],
+              },
+              {
+                heading: 'Diseño',
+                body: 'La rama del ciclo: una flor por día que pasó, del tamaño de lo que se gastó ese día, y pimpollos para los días que faltan hasta el cierre. Las inversiones se dibujan como una flor en la que cada pétalo es su parte del total.',
+              },
+            ],
+            tradeoffs: {
+              heading: 'Por qué Apps Script y no un backend',
+              prosHeading: 'Lo que resolvió',
+              pros: [
+                { k: 'Gmail sin OAuth propio', v: 'El script corre como el dueño de la cuenta y lee el correo directo, sin registrar una app OAuth ni pasar la verificación de Google.' },
+                { k: 'Tareas programadas incluidas', v: 'Los triggers reemplazan a un cron: Gmail cada 30 minutos, Mercado Pago a las 6 y el resumen los viernes a las 9.' },
+                { k: 'Login gratis', v: 'Acceso solo para el dueño, sin armar usuarios, sesiones ni contraseñas.' },
+                { k: 'Costo cero', v: 'No hay hosting, base de datos ni dominio que pagar.' },
+              ],
+              consHeading: 'Lo que se resignó',
+              cons: [
+                { k: 'Límites de ejecución', v: 'Cada ejecución tiene minutos contados. Las importaciones largas usan un lock y guardan el trabajo en pasos.' },
+                { k: 'Sin npm en el servidor', v: 'pdf.js corre en el navegador.' },
+                { k: 'Deploy más manual', v: 'La web app sirve una versión fija: después de cada clasp push hay que redeployar.' },
+                { k: 'Tests separados', v: 'La lógica de negocio vive en archivos que no usan servicios de Google, para poder correrla en Node.' },
+              ],
+              verdict:
+                'Para una sola persona con datos privados, la cuenta cierra a favor de Apps Script. Para varios usuarios, convendría un backend convencional.',
+            },
+          },
+        },
+        {
+          id: 'creator-hub',
+          kicker: 'proyecto propio · 2026 · beta cerrada',
+          title: 'Creator Hub',
+          tagline: 'Subí un video una vez. Publicalo en tres redes.',
+          problem:
+            'Publicar el mismo clip vertical en tres redes era subirlo tres veces, convertirlo a mano, programar donde la API no deja y comparar el rendimiento en tres paneles que miden distinto.',
+          approach:
+            'Una web app para streamers en Cloudflare Workers: el video se sube una vez a R2, FFmpeg lo convierte solo si hace falta, un workflow por red lo publica o programa con reintentos, y un recolector lee las métricas para compararlas por horas desde la publicación.',
+          tags: ['Cloudflare Workers', 'Hono', 'D1 + Drizzle', 'R2', 'Queues · Workflows · Cron', 'Containers + FFmpeg', 'React 19 + Vite', 'Tailwind 4', 'TanStack Query', 'TypeScript + zod', 'Vitest + Biome'],
+          note: 'beta cerrada para un grupo chico de streamers',
+          detail: {
+            meta: [
+              { k: 'Tipo', v: 'App web, beta cerrada para streamers' },
+              { k: 'Rol', v: 'Diseño, backend y frontend' },
+              { k: 'Año', v: '2026' },
+              { k: 'Corre en', v: 'Cloudflare Workers, con FFmpeg en un contenedor' },
+            ],
+            sections: [
+              {
+                heading: 'El problema',
+                body: 'Un streamer que recorta un momento del directo quiere subirlo a las tres redes de video vertical. Eso era abrir tres apps, cargar el mismo texto con los límites de cada una, exportar el video en el formato que pide cada red y, al final, mirar tres paneles que miden las vistas de forma distinta.',
+                items: [
+                  { k: 'Subir tres veces', v: 'Mismo archivo, tres subidas. Si venía en horizontal o en HEVC, había que convertirlo a mano.' },
+                  { k: 'Programar a mano', v: 'Instagram no deja programar por API: publicar a las 18 h en las tres redes dependía de estar frente a la compu.' },
+                  { k: 'Comparar a ojo', v: 'Un Reel de hace dos días contra un Short de hace una semana no dice nada.' },
+                ],
+              },
+              {
+                heading: 'Cómo funciona',
+                items: [
+                  { k: 'Subida desde el navegador', v: 'El archivo viaja en partes de 32 MB a R2. Una parte que falla se reintenta sola, y la subida se rechaza antes del primer byte si no entra en el cupo.' },
+                  { k: 'Clips de Twitch', v: 'Se importa un clip del canal, se recorta y se pasa a vertical con la cámara arriba y el juego abajo.' },
+                  { k: 'Leer y convertir', v: 'Una cola manda el archivo a un contenedor con FFmpeg. Si ya es 1080×1920 en H.264, sale tal cual; si no, se encuadra sobre un fondo desenfocado.' },
+                  { k: 'Publicar', v: 'Un workflow por red y por intento: preparar, subir, esperar que la red lo procese y confirmar, con hasta 3 reintentos.' },
+                  { k: 'Medir', v: 'Cada hora las primeras 48 h, cada día hasta los 30 y cada semana hasta los 90, guardando las horas que pasaron desde la publicación.' },
+                ],
+              },
+              {
+                heading: 'Tres piezas que hacen el trabajo pesado',
+                items: [
+                  { k: 'Seguimiento por red', v: 'Cada red publica por su cuenta y nunca dos veces: antes de reintentar se consulta la red con el ID guardado. Solo se reintentan los errores temporales.' },
+                  { k: 'Comparador', v: 'Pone cada publicación en el mismo eje de horas desde que salió, así un Reel de las 21 h y un Short de las 18 h se comparan parejo, y elige un ganador por criterio.' },
+                  { k: 'Cupos y frenos', v: 'R2 es gratis hasta 10 GB y Cloudflare no corta el servicio, solo avisa. Así que la app se frena sola: cupo por cuenta, tope global, minutos de FFmpeg y la cuota diaria de YouTube.' },
+                ],
+              },
+              {
+                heading: 'Decisiones',
+                items: [
+                  { k: 'Un solo Worker', v: 'Sirve la API y la web en el mismo dominio, con cookie HttpOnly y sin CORS. Login con Twitch o Google, y cada alta la aprueba un admin.' },
+                  { k: 'Programar es cambiar una fecha', v: 'Un Cron por minuto despacha los trabajos vencidos. Reprogramar, también arrastrando en el calendario, es editar una fecha.' },
+                  { k: 'Adaptadores simulados primero', v: 'Cada red tiene un adaptador falso con los mismos estados y errores que el real, para probar los casos raros.' },
+                  { k: 'Tokens cifrados', v: 'Los accesos a cada red se guardan con AES-256-GCM y una versión de clave para poder rotarla.' },
+                  { k: 'Null, no cero', v: 'Lo que una red no informa queda vacío con su motivo. TikTok no da vistas diarias de la cuenta, así que no se suman.' },
+                  { k: 'Monorepo tipado', v: 'Tipos y esquemas zod compartidos entre la API y la web, y unos 300 tests con Vitest sobre el runtime de Workers.' },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+      alCierre: {
+        cycle: 'Ciclo de octubre',
+        range: '26/09 al 29/10 · datos de ejemplo',
+        start: 'Inicio sáb 26/09',
+        close: 'Cierre jue 29/10',
+        todaySummary: 'Día {day} de {total} · llevás gastado en el ciclo',
+        daySpent: 'gasto del día',
+        dayNone: 'sin gasto',
+        dayFuture: 'todavía no llegó',
+        todayTag: 'hoy',
+        bud: 'pimpollo',
+        hint: 'Una flor por día que pasó, del tamaño de lo gastado ese día, y pimpollos hasta el cierre. Pasá el cursor por una flor.',
+      },
+      creatorHub: {
+        clip: 'Clutch 1v4 en la final',
+        publish: 'Publicar en las 3 redes',
+        publishing: 'publicando…',
+        restart: 'volver a empezar',
+        cloudNote: 'Podés cerrar la pestaña: la publicación sigue en la nube. Datos de ejemplo.',
+        status: {
+          ready: 'Lista',
+          preparing: 'Preparando',
+          uploading: 'Subiendo',
+          processing: 'Publicando',
+          published: 'Publicado',
+        },
+        notes: {
+          ready: 'Esperando que toques Publicar',
+          preparing: 'Leyendo el video con ffprobe',
+          uploading: 'Subida reanudable desde R2',
+          processing: 'La red está procesando el video',
+          publishedYouTube: '1 intento · subida reanudable desde R2',
+          publishedInstagram: '1 intento · el video bajó de un link firmado',
+          privateTikTok: 'Se publicó en privado: la app todavía está en revisión por TikTok',
+        },
+      },
+    },
+    clientsHeading: 'Para clientes y empleadores',
     cases: [
       {
         num: '01',
