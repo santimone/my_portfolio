@@ -4,8 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#1a1c1f" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#151210" />
+    <!-- apply the saved day/night choice before first paint (key: src/appearance/context.ts) -->
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('sm.portfolio.theme') === 'day' ? 'day' : 'night'
+      } catch (e) {
+        document.documentElement.dataset.theme = 'night'
+      }
+    </script>
     <!-- title and description are replaced at runtime by the active language -->
     <title>Santiago Monedero — Full-stack developer, web and mobile</title>
     <meta

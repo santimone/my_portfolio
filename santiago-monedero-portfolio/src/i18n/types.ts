@@ -6,6 +6,8 @@ export interface HeroFieldCopy {
   kicker: string
   headline: [string, string]
   body: string
+  /** accessible name for the interactive shoji panel */
+  panelLabel: string
 }
 
 export interface StackGroup {
@@ -44,6 +46,84 @@ export interface CaseEntry {
   problem: string
   approach: string
   tags: string[]
+}
+
+export interface KeyValue {
+  k: string
+  v: string
+}
+
+/** One block of a case-study dialog: a paragraph, a list of labelled points, or both. */
+export interface CaseDetailSection {
+  heading: string
+  body?: string
+  items?: KeyValue[]
+}
+
+/** A project of my own — shown openly, with a full case study in a dialog. */
+export interface OwnProject {
+  id: 'al-cierre' | 'creator-hub'
+  kicker: string
+  title: string
+  tagline: string
+  problem: string
+  approach: string
+  tags: string[]
+  /** small print next to the "view case" button */
+  note: string
+  detail: {
+    meta: KeyValue[]
+    sections: CaseDetailSection[]
+    tradeoffs?: {
+      heading: string
+      prosHeading: string
+      pros: KeyValue[]
+      consHeading: string
+      cons: KeyValue[]
+      verdict: string
+    }
+  }
+}
+
+/** Labels for the Al Cierre card's interactive spending branch. */
+export interface AlCierreDemo {
+  cycle: string
+  range: string
+  start: string
+  close: string
+  /** "{day}" and "{total}" are replaced */
+  todaySummary: string
+  daySpent: string
+  dayNone: string
+  dayFuture: string
+  todayTag: string
+  bud: string
+  hint: string
+}
+
+/** Labels for the Creator Hub card's publish walkthrough. */
+export interface CreatorHubDemo {
+  clip: string
+  publish: string
+  publishing: string
+  restart: string
+  cloudNote: string
+  status: {
+    ready: string
+    preparing: string
+    uploading: string
+    processing: string
+    published: string
+  }
+  notes: {
+    ready: string
+    preparing: string
+    uploading: string
+    processing: string
+    publishedYouTube: string
+    publishedInstagram: string
+    privateTikTok: string
+  }
 }
 
 export interface EngagementEntry {
@@ -107,6 +187,12 @@ export interface Dict {
     en: string
     es: string
   }
+  appearance: {
+    night: string
+    day: string
+    toDay: string
+    toNight: string
+  }
   cta: {
     primary: string
     secondary: string
@@ -136,6 +222,17 @@ export interface Dict {
     heading: string
     intro: string
     labels: { problem: string; approach: string; stack: string }
+    own: {
+      heading: string
+      sub: string
+      viewCase: string
+      close: string
+      sampleData: string
+      projects: OwnProject[]
+      alCierre: AlCierreDemo
+      creatorHub: CreatorHubDemo
+    }
+    clientsHeading: string
     cases: CaseEntry[]
   }
   about: {

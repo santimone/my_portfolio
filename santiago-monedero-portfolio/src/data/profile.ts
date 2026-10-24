@@ -61,13 +61,12 @@ export const GRAPH_NODES = [
   { n: 'C++', g: 4 },
 ] as const
 
-export const GRAPH_COLORS = [
-  'oklch(0.82 0.15 152)',
-  'oklch(0.80 0.13 220)',
-  'oklch(0.82 0.14 95)',
-  'oklch(0.78 0.14 320)',
-  'oklch(0.70 0.01 250)',
-]
+/**
+ * One colour per group (mobile, frontend, backend, data, tooling). They are
+ * drawn on the lit paper of the graph panel in both themes, so they are dark
+ * ink colours: wood, indigo, matcha, vermilion, sumi.
+ */
+export const GRAPH_COLORS = ['#7a4a24', '#2f4f86', '#4a6a26', '#a8361f', '#4a3b2e']
 
 /** Proficiency bars — the percentages are language-independent. */
 export const DEPTH_LEVELS = [

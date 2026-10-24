@@ -39,6 +39,23 @@ registered with. A hidden honeypot field catches the bots that fill everything.
 the message pre-filled and says so, rather than pretending to deliver. Same if
 the POST fails — the error state offers the mail client as a one-click fallback.
 
+## Theme
+
+The look is kumiko — Japanese wooden lattice — in two modes: **night** (the
+default: burnt wood, shoji paper lit from behind) and **day** (washi paper,
+pale hinoki). Every colour is a CSS variable defined per mode in
+[`src/index.css`](src/index.css); [`src/theme.ts`](src/theme.ts) only refers to
+those variables, so switching sets `data-theme` on `<html>` and the browser
+repaints — nothing re-renders. The choice is remembered in `localStorage`, and a
+tiny inline script in `index.html` applies it before first paint. The skill
+graph draws on a canvas, so it reads the variables with `getComputedStyle` and
+re-reads them when `data-theme` changes.
+
+My own projects (Al Cierre, Creator Hub) keep their apps' own palettes in both
+modes ([`src/components/work/palettes.ts`](src/components/work/palettes.ts)).
+Their apps are private, so "view the case" opens the full write-up in a native
+`<dialog>` instead of linking out.
+
 ## Languages
 
 The site ships in English and Spanish, with a switch in the header. The initial

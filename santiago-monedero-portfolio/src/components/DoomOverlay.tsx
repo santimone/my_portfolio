@@ -117,7 +117,7 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        background: 'oklch(0.07 0.004 250 / 0.97)',
+        background: 'rgb(8 6 5 / 0.97)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -140,7 +140,7 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
             fontFamily: mono,
             fontSize: 12,
             letterSpacing: '0.08em',
-            color: c.textDim,
+            color: c.codeDim,
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -156,9 +156,9 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
             fontSize: 11,
             padding: '5px 11px',
             borderRadius: 999,
-            border: `1px solid ${c.lineStrong}`,
+            border: `1px solid ${c.codeLine}`,
             background: 'transparent',
-            color: c.text,
+            color: c.codeText,
             cursor: 'pointer',
             flexShrink: 0,
           }}
@@ -172,10 +172,10 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
         style={{
           width: 'min(100%, 960px, calc((100vh - 170px) * 4 / 3))',
           aspectRatio: '4 / 3',
-          border: `1px solid ${c.lineStrong}`,
+          border: `1px solid ${c.codeLine}`,
           borderRadius: 9,
           overflow: 'hidden',
-          background: 'oklch(0 0 0)',
+          background: '#000',
         }}
       >
         {failed && (
@@ -188,7 +188,7 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
               padding: 24,
               fontFamily: mono,
               fontSize: 12.5,
-              color: c.danger,
+              color: c.codeError,
               textAlign: 'center',
             }}
           >
@@ -201,7 +201,7 @@ export default function DoomOverlay({ onClose }: { onClose: () => void }) {
         style={{
           fontFamily: mono,
           fontSize: 11,
-          color: c.textDim,
+          color: c.codeDim,
           textAlign: 'center',
           lineHeight: 1.6,
         }}

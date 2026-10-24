@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useI18n } from '../i18n/useI18n'
 import { useViewportWidth } from '../hooks/useViewportWidth'
-import { c, eyebrow, mono, shell } from '../theme'
+import { c, display, eyebrow, mix, mono, shell } from '../theme'
 
 const NARROW = 760
 
@@ -70,10 +70,11 @@ export function TraceSection() {
       <div style={{ ...eyebrow, marginBottom: 12 }}>{t.trace.eyebrow}</div>
       <h2
         style={{
-          fontSize: 'clamp(24px, 3.4vw, 40px)',
-          lineHeight: 1.06,
-          letterSpacing: '-0.03em',
-          fontWeight: 600,
+          fontFamily: display,
+          fontSize: 'clamp(26px, 3.6vw, 42px)',
+          lineHeight: 1.1,
+          letterSpacing: '-0.01em',
+          fontWeight: 700,
           margin: 0,
           maxWidth: '24ch',
           textWrap: 'balance',
@@ -85,7 +86,7 @@ export function TraceSection() {
   )
 
   return (
-    <section id="trace" style={{ position: 'relative', borderTop: `1px solid ${c.lineSoft}` }}>
+    <section id="trace" style={{ position: 'relative' }}>
       {narrow && (
         <div style={{ padding: '64px clamp(16px, 4vw, 56px) 18px' }}>
           <div style={shell}>{head}</div>
@@ -121,8 +122,8 @@ export function TraceSection() {
             <div
               style={{
                 position: 'relative',
-                height: 3,
-                background: c.lineDim,
+                height: 4,
+                background: c.line,
                 borderRadius: 2,
                 margin: narrow ? '0 0 22px' : '0 0 34px',
               }}
@@ -148,7 +149,7 @@ export function TraceSection() {
                   margin: '-7px 0 0 -7px',
                   borderRadius: '50%',
                   background: c.acc,
-                  boxShadow: '0 0 22px oklch(0.82 0.15 152 / 0.8)',
+                  boxShadow: `0 0 22px ${mix(c.acc, 80)}`,
                 }}
               />
             </div>
@@ -168,15 +169,15 @@ export function TraceSection() {
                   <div
                     key={st.num}
                     style={{
-                      border: `1px solid ${
-                        on
-                          ? 'oklch(0.82 0.15 152 / 0.7)'
-                          : done
-                            ? 'oklch(0.4 0.05 152)'
-                            : c.line
+                      // longhands only: these change on scroll, and React mishandles
+                      // a shorthand and its longhand updating together
+                      borderStyle: 'solid',
+                      borderWidth: '5px 1px 1px',
+                      borderColor: `${on ? c.acc : done ? c.wood : c.line} ${
+                        on ? mix(c.acc, 70) : done ? c.wood : c.line
                       }`,
-                      background: on ? 'oklch(0.82 0.15 152 / 0.1)' : 'oklch(0.17 0.007 250)',
-                      borderRadius: 7,
+                      background: on ? mix(c.acc, 10) : c.bgPanel,
+                      borderRadius: 4,
                       padding: narrow ? '9px 4px' : 'clamp(10px, 1.4vw, 16px)',
                       transition: 'all 320ms ease',
                       minHeight: narrow ? 0 : 92,
@@ -188,7 +189,7 @@ export function TraceSection() {
                         fontFamily: mono,
                         fontSize: narrow ? 11 : 10,
                         letterSpacing: '0.1em',
-                        color: on ? c.acc : done ? c.textGhost : 'oklch(0.45 0.01 250)',
+                        color: on ? c.acc : c.textFaint,
                       }}
                     >
                       {st.num}
@@ -201,11 +202,7 @@ export function TraceSection() {
                           style={{
                             fontFamily: mono,
                             fontSize: 'clamp(11px, 1.15vw, 14px)',
-                            color: on
-                              ? 'oklch(0.95 0.02 152)'
-                              : done
-                                ? c.textSoft
-                                : 'oklch(0.6 0.01 250)',
+                            color: on ? c.text : done ? c.textSoft : c.textDim,
                             marginTop: 8,
                             lineHeight: 1.35,
                             wordBreak: 'break-word',
@@ -216,7 +213,7 @@ export function TraceSection() {
                         <div
                           style={{
                             fontSize: 11,
-                            color: 'oklch(0.52 0.01 250)',
+                            color: c.textFaint,
                             marginTop: 6,
                             lineHeight: 1.4,
                           }}
@@ -270,10 +267,11 @@ export function TraceSection() {
                       )}
                       <h3
                         style={{
-                          fontSize: 'clamp(18px, 2.2vw, 26px)',
-                          fontWeight: 600,
+                          fontFamily: display,
+                          fontSize: 'clamp(19px, 2.2vw, 26px)',
+                          fontWeight: 700,
                           margin: '0 0 10px',
-                          letterSpacing: '-0.02em',
+                          lineHeight: 1.3,
                         }}
                       >
                         {st.headline}
@@ -282,7 +280,7 @@ export function TraceSection() {
                         style={{
                           fontSize: 14.5,
                           lineHeight: 1.65,
-                          color: 'oklch(0.7 0.01 250)',
+                          color: c.textSoft,
                           margin: 0,
                           maxWidth: '48ch',
                           textWrap: 'pretty',
@@ -294,9 +292,9 @@ export function TraceSection() {
 
                     <div
                       style={{
-                        border: `1px solid ${c.line}`,
-                        borderRadius: 7,
-                        background: c.bgCode,
+                        border: `8px solid ${c.woodDark}`,
+                        borderRadius: 6,
+                        background: c.codeBg,
                         overflow: 'hidden',
                         minWidth: 0,
                       }}
@@ -304,10 +302,10 @@ export function TraceSection() {
                       <div
                         style={{
                           padding: '8px 13px',
-                          borderBottom: `1px solid ${c.lineSoft}`,
+                          borderBottom: `1px solid ${c.codeLine}`,
                           fontFamily: mono,
                           fontSize: 10.5,
-                          color: 'oklch(0.54 0.01 250)',
+                          color: c.codeDim,
                         }}
                       >
                         {st.file}
@@ -319,7 +317,7 @@ export function TraceSection() {
                           fontFamily: mono,
                           fontSize: 'clamp(10.5px, 1vw, 12.5px)',
                           lineHeight: 1.75,
-                          color: 'oklch(0.8 0.02 152)',
+                          color: c.codeText,
                           overflowX: 'auto',
                           whiteSpace: 'pre',
                         }}

@@ -2,9 +2,11 @@ import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
 import type { Dict } from '../i18n/types'
 import { useViewportWidth } from '../hooks/useViewportWidth'
-import { c, mono } from '../theme'
+import { c, display, mono } from '../theme'
 import { LanguageSwitch } from './LanguageSwitch'
+import { Seal } from './Seal'
 import { StableLabel } from './StableLabel'
+import { ThemeToggle } from './ThemeToggle'
 
 /**
  * Nav labels are addressed by getter rather than by value: StableLabel needs
@@ -32,7 +34,7 @@ export function Header() {
         justifyContent: 'space-between',
         gap: 16,
         padding: '14px clamp(16px, 4vw, 56px)',
-        background: 'oklch(0.15 0.006 250 / 0.82)',
+        background: c.headerBg,
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
         borderBottom: `1px solid ${c.line}`,
@@ -40,31 +42,20 @@ export function Header() {
     >
       <a
         href="#top"
+        aria-label={profile.name}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          fontFamily: mono,
-          fontSize: 13,
-          letterSpacing: '0.02em',
+          gap: 11,
+          fontFamily: display,
+          fontSize: 16,
+          fontWeight: 700,
           color: c.text,
           whiteSpace: 'nowrap',
         }}
       >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            background: c.acc,
-            animation: 'pulseDot 2.4s infinite',
-            flexShrink: 0,
-          }}
-        />
-        <span style={{ fontWeight: 700 }}>{profile.handle}</span>
-        <span className="logo-suffix" style={{ color: c.meta }}>
-          /dev
-        </span>
+        <Seal size={34} />
+        <span className="logo-name">{profile.name}</span>
       </a>
 
       <nav
@@ -84,6 +75,8 @@ export function Header() {
               <StableLabel pick={l.pick} />
             </a>
           ))}
+
+        <ThemeToggle />
 
         <LanguageSwitch />
 
@@ -105,11 +98,11 @@ function HireButton() {
         display: 'inline-flex',
         justifyContent: 'center',
         whiteSpace: 'nowrap',
-        padding: '7px 14px',
-        border: '1px solid oklch(0.82 0.15 152 / 0.5)',
-        borderRadius: 4,
-        color: c.acc,
-        background: 'oklch(0.82 0.15 152 / 0.08)',
+        padding: '8px 15px',
+        borderRadius: 5,
+        color: c.accInk,
+        background: c.acc,
+        fontWeight: 700,
       }}
     >
       <StableLabel pick={(d) => d.nav.hire} />

@@ -1,6 +1,6 @@
 import { useI18n } from '../i18n/useI18n'
 import type { Lang } from '../i18n/types'
-import { c, mono } from '../theme'
+import { c, mix, mono } from '../theme'
 import { FlagEn, FlagEs } from './Flags'
 
 const OPTIONS: { lang: Lang; flag: () => React.ReactElement; title: string }[] = [
@@ -53,8 +53,8 @@ export function LanguageSwitch() {
               fontSize: 11,
               letterSpacing: '0.06em',
               // the selected flag stays in full colour; the other one recedes
-              border: `1px solid ${on ? 'oklch(0.82 0.15 152 / 0.55)' : 'transparent'}`,
-              background: on ? 'oklch(0.82 0.15 152 / 0.14)' : 'transparent',
+              border: `1px solid ${on ? mix(c.acc, 55) : 'transparent'}`,
+              background: on ? mix(c.acc, 14) : 'transparent',
               color: on ? c.acc : c.textDim,
               filter: on ? 'none' : 'saturate(0.35) opacity(0.65)',
               transition: 'background 160ms ease, border-color 160ms ease, filter 160ms ease',

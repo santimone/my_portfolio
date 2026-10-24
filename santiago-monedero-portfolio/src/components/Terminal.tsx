@@ -15,12 +15,13 @@ interface Line {
   tone: Tone
 }
 
+// the terminal is ink-dark in both themes, so it uses the fixed code colours
 const toneColor: Record<Tone, string> = {
-  prompt: 'oklch(0.82 0.15 152)',
-  normal: 'oklch(0.9 0.008 250)',
-  dim: 'oklch(0.62 0.01 250)',
-  accent: 'oklch(0.82 0.15 152)',
-  error: 'oklch(0.68 0.16 25)',
+  prompt: c.codeAcc,
+  normal: c.codeText,
+  dim: c.codeDim,
+  accent: c.codeAcc,
+  error: c.codeError,
 }
 
 const dim = (text: string): Line => ({ text, tone: 'dim' })
@@ -100,6 +101,10 @@ export function Terminal() {
           break
 
         case key === 'projects':
+          for (const p of t.work.own.projects) {
+            out.push(acc(p.title + '  — ' + p.tagline), dim('    ' + p.kicker))
+          }
+          out.push(blank())
           for (const k of t.work.cases) {
             out.push(acc(k.num + '  ' + k.title), dim('    ' + k.meta))
           }
@@ -178,11 +183,11 @@ export function Terminal() {
       <div
         onClick={focus}
         style={{
-          border: `1px solid ${c.lineStrong}`,
-          borderRadius: 9,
-          background: c.bgTerminal,
+          border: `10px solid ${c.woodDark}`,
+          borderRadius: 6,
+          background: c.codeBg,
           overflow: 'hidden',
-          boxShadow: '0 30px 70px -34px oklch(0.05 0 0 / 0.9)',
+          boxShadow: `0 0 60px ${c.halo}, 0 30px 70px -34px rgb(0 0 0 / 0.6)`,
         }}
       >
         <TerminalChrome title={t.terminal.title} />
@@ -210,7 +215,7 @@ export function Terminal() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-            <span style={{ color: c.acc }}>❯</span>
+            <span style={{ color: c.codeAcc }}>❯</span>
             <input
               ref={inputRef}
               value={value}
@@ -231,7 +236,8 @@ export function Terminal() {
                 outline: 'none',
                 fontFamily: mono,
                 fontSize: 12.5,
-                color: c.text,
+                color: c.codeText,
+                caretColor: c.codeAcc,
                 padding: 0,
                 minWidth: 0,
               }}
@@ -257,7 +263,7 @@ export function Terminal() {
               borderRadius: 999,
               border: `1px solid ${c.lineStrong}`,
               background: 'transparent',
-              color: c.textDim,
+              color: c.textMuted,
               cursor: 'pointer',
             }}
           >

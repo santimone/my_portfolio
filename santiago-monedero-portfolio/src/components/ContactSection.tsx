@@ -2,7 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
 import { canPostDirectly, mailtoUrl, postContact, type ContactPayload } from '../lib/sendContact'
-import { c, mono, sans, shell } from '../theme'
+import { c, display, mono, railTop, sans, shell } from '../theme'
 import {
   GitHubIcon,
   InstagramIcon,
@@ -65,7 +65,7 @@ export function ContactSection() {
     fontSize: 10.5,
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
-    color: c.label,
+    color: c.textFaint,
   }
 
   const fieldStyle: React.CSSProperties = {
@@ -82,7 +82,6 @@ export function ContactSection() {
       id="contact"
       style={{
         padding: 'clamp(56px, 10vh, 120px) clamp(16px, 4vw, 56px) clamp(40px, 6vh, 70px)',
-        borderTop: `1px solid ${c.lineSoft}`,
       }}
     >
       <div
@@ -109,24 +108,25 @@ export function ContactSection() {
 
           <h2
             style={{
-              fontSize: 'clamp(30px, 5vw, 62px)',
-              lineHeight: 0.98,
-              letterSpacing: '-0.035em',
-              fontWeight: 600,
+              fontFamily: display,
+              fontSize: 'clamp(34px, 5.4vw, 70px)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              fontWeight: 800,
               margin: '0 0 22px',
               textWrap: 'balance',
             }}
           >
             {t.contact.headline[0]}
             <br />
-            {t.contact.headline[1]}
+            <span style={{ color: c.acc }}>{t.contact.headline[1]}</span>
           </h2>
 
           <p
             style={{
               fontSize: 15.5,
               lineHeight: 1.7,
-              color: c.textMuted,
+              color: c.textSoft,
               margin: '0 0 30px',
               maxWidth: '44ch',
               textWrap: 'pretty',
@@ -195,7 +195,7 @@ export function ContactSection() {
                 gap: '6px 18px',
                 marginTop: 6,
                 paddingTop: 14,
-                borderTop: `1px solid ${c.lineDim}`,
+                borderTop: `1px solid ${c.line}`,
                 color: c.textFaint,
                 fontSize: 12.5,
               }}
@@ -209,7 +209,8 @@ export function ContactSection() {
         <div
           style={{
             border: `1px solid ${c.line}`,
-            borderRadius: 10,
+            ...railTop,
+            borderRadius: 4,
             background: c.bgPanel,
             padding: 'clamp(22px, 3vw, 32px)',
           }}
@@ -309,9 +310,9 @@ export function ContactSection() {
                           padding: '7px 13px',
                           borderRadius: 999,
                           cursor: 'pointer',
-                          border: `1px solid ${on ? 'oklch(0.82 0.15 152 / 0.6)' : c.lineBright}`,
-                          background: on ? 'oklch(0.82 0.15 152 / 0.14)' : 'transparent',
-                          color: on ? c.acc : 'oklch(0.66 0.01 250)',
+                          border: `1px solid ${on ? c.acc : c.lineStrong}`,
+                          background: on ? c.acc : 'transparent',
+                          color: on ? c.accInk : c.textSoft,
                           transition: 'all 180ms ease',
                         }}
                       >
@@ -391,7 +392,7 @@ const outlineButton: React.CSSProperties = {
   alignSelf: 'flex-start',
   padding: '10px 16px',
   borderRadius: 5,
-  border: `1px solid ${c.lineBright}`,
+  border: `1px solid ${c.lineStrong}`,
   background: 'transparent',
   cursor: 'pointer',
   fontFamily: mono,
@@ -454,14 +455,14 @@ function Panel({
         fontFamily: mono,
       }}
     >
-      <div style={{ fontSize: 12.5, color: 'oklch(0.55 0.01 250)' }}>{route}</div>
+      <div style={{ fontSize: 12.5, color: c.textFaint }}>{route}</div>
       <div style={{ fontSize: 12.5, color: statusColor }}>{status}</div>
       <div
         style={{
-          fontSize: 19,
+          fontSize: 26,
           color: c.text,
-          fontFamily: sans,
-          fontWeight: 600,
+          fontFamily: display,
+          fontWeight: 800,
           marginTop: 8,
         }}
       >
@@ -469,8 +470,8 @@ function Panel({
       </div>
       <div
         style={{
-          fontSize: 14,
-          color: 'oklch(0.68 0.01 250)',
+          fontSize: 14.5,
+          color: c.textSoft,
           fontFamily: sans,
           lineHeight: 1.6,
           maxWidth: '40ch',

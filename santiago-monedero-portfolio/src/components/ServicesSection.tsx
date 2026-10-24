@@ -1,5 +1,5 @@
 import { useI18n } from '../i18n/useI18n'
-import { c, eyebrow, h2, mono, shell, sectionPad } from '../theme'
+import { c, display, eyebrow, h2, mono, railTop, shell, sectionPad } from '../theme'
 import { Tag } from './Tag'
 
 export function ServicesSection() {
@@ -10,7 +10,6 @@ export function ServicesSection() {
       id="build"
       style={{
         padding: sectionPad,
-        borderTop: `1px solid ${c.lineSoft}`,
         background: c.bgAlt,
       }}
     >
@@ -18,16 +17,12 @@ export function ServicesSection() {
         <div style={eyebrow}>{t.services.eyebrow}</div>
         <h2 style={{ ...h2, margin: '0 0 40px', maxWidth: '20ch' }}>{t.services.heading}</h2>
 
-        {/* 1px gaps over a lined background give the grid its hairline rules */}
+        {/* separate panels, each with a wooden top rail like a shoji frame */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 1,
-            background: c.lineDim,
-            border: `1px solid ${c.lineDim}`,
-            borderRadius: 10,
-            overflow: 'hidden',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 330px), 1fr))',
+            gap: 18,
           }}
         >
           {t.services.items.map((s) => (
@@ -35,8 +30,11 @@ export function ServicesSection() {
               key={s.num}
               className="service-cell"
               style={{
-                background: 'oklch(0.16 0.006 250)',
-                padding: 'clamp(22px, 3vw, 34px)',
+                background: c.bgPanel,
+                border: `1px solid ${c.line}`,
+                ...railTop,
+                borderRadius: 4,
+                padding: 'clamp(22px, 3vw, 32px)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 12,
@@ -46,14 +44,14 @@ export function ServicesSection() {
               <div style={{ fontFamily: mono, fontSize: 11, color: c.acc, letterSpacing: '0.1em' }}>
                 {s.num}
               </div>
-              <h3 style={{ fontSize: 20, fontWeight: 600, margin: 0, letterSpacing: '-0.015em' }}>
+              <h3 style={{ fontFamily: display, fontSize: 21, fontWeight: 700, margin: 0, lineHeight: 1.3 }}>
                 {s.title}
               </h3>
               <p
                 style={{
                   fontSize: 14.5,
                   lineHeight: 1.6,
-                  color: 'oklch(0.68 0.01 250)',
+                  color: c.textSoft,
                   margin: 0,
                   textWrap: 'pretty',
                 }}

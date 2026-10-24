@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { profile } from '../data/profile'
 import { useI18n } from '../i18n/useI18n'
 import { c, mono } from '../theme'
+import { Seal } from './Seal'
 
 /** Buenos Aires wall-clock time, regardless of where the visitor is. */
 function useBuenosAiresClock(): string {
@@ -43,7 +44,7 @@ export function Footer() {
     <footer
       style={{
         padding: '26px clamp(16px, 4vw, 56px) 34px',
-        borderTop: `1px solid ${c.lineSoft}`,
+        borderTop: `1px solid ${c.line}`,
         display: 'flex',
         flexWrap: 'wrap',
         gap: 14,
@@ -54,7 +55,10 @@ export function Footer() {
         color: c.textFaint,
       }}
     >
-      <span>{t.footer.built}</span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <Seal size={26} />
+        {t.footer.built}
+      </span>
       <span>{clock}</span>
     </footer>
   )

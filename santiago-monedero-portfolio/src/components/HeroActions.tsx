@@ -51,7 +51,7 @@ export function HeroActions({
           ...base,
           ...wide,
           border: `1px solid ${c.lineStrong}`,
-          color: 'oklch(0.86 0.01 250)',
+          color: c.text,
         }}
       >
         {t.cta.secondary}
